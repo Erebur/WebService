@@ -1,16 +1,21 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Express' });
+router.get('/', function (req, res, next) {
+    res.render('index', {title: 'Express'});
 });
 
-router.post("/create_order", (req, res) => {
-    res.status(100)
+router.post("/order", (req, res) => {
+    //TODO use statuses
+    //TODO create in database
+    res.status(202)
+    // database.each(`Insert into`)
+    //TODO create order ID
+    res.send()
 })
-router.get("/get_order", (req, res) => {
-    res.status(100)
+router.get("/order", (req, res) => {
+    // res.json("Status" : )
 })
 
 
