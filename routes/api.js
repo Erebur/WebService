@@ -1,3 +1,5 @@
+const Adresse = require("./adresse");
+
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
@@ -20,8 +22,18 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
-
 router.post("/order", (req, res) => {
+    let delivery_adress_json = "lieferAdresse";
+    let billing_adress_json = "rechnungsAdresse";
+
+    const delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
+    const billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
+
+
+    console.log(req.body.lieferAdresse.vorname)
+
+    // con.query("Insert into Auftrag () ")
+
     //TODO use statuses
     //TODO create in database
     res.status(202)
