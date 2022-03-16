@@ -23,13 +23,22 @@ const Adresse = class{
         return this._ort;
     }
 
-    constructor(vorname, nachname, strasse, nr, plz, ort) {
+    get id() {
+        return this._id;
+    }
+
+    set id(value) {
+        this._id = value;
+    }
+
+    constructor(vorname, nachname, strasse, nr, plz, ort ,id) {
         this._vorname = vorname;
         this._nachname = nachname;
         this._strasse = strasse;
         this._nr = nr;
         this._plz = plz;
         this._ort = ort;
+        this._id = id;
     }
 }
 module.exports = Adresse
