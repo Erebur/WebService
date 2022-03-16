@@ -20,6 +20,8 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
+
+
 router.post("/order", (req, res) => {
     let delivery_adress_json = "lieferAdresse";
     let billing_adress_json = "rechnungsAdresse";
@@ -30,16 +32,29 @@ router.post("/order", (req, res) => {
 
     con.query(`Select adresse_index(?,?,?,?,?,?) ;`, [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort], (err, result) => {
         if (err) console.log(err);
-        delivery_adress.id = Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
+        delivery_adress.id = getIdFromRow(result);
         console.log(delivery_adress.id);
     })
     con.query(`Select adresse_index(?,?,?,?,?,?) ;`, [billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort], (err, result) => {
         if (err) console.log(err);
-        // Jesus Christ our Savior and Lord please save us from Javascript
-        // and cursed AF code
-        billing_adress.id = Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
+
+        billing_adress.id = getIdFromRow(result);
         console.log(billing_adress.id);
     })
+
+    try {
+        con.query(`Select p.id from Produkt p where p.name = ?;`, [req.body["bestellung"]["type"]], (err, result) => {
+            if (err) console.log(err);
+            console.log(getIdFromRow(result))
+        })
+    }catch (e) {
+        //TODO abort if error
+        // console.error(e)
+    }
+
+
+    //TODO create Order
+
 
     console.log(req.body["lieferAdresse"].nachname)
 
@@ -56,5 +71,15 @@ router.post("/order", (req, res) => {
 router.get("/order", (req, res) => {
     // res.json("Status" : )
 });
+
+function getIdFromRow(result) {
+    // Jesus Christ our Savior and Lord please save us from Javascript
+    // and cursed AF code
+    try {
+        return Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
+    } catch (e) {
+        // console.log(e)
+    }
+}
 
 module.exports = router;
