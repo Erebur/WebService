@@ -21,51 +21,30 @@ router.get('/', function (req, res, next) {
 });
 
 
+function send(res) {
+    res.send()
+}
 
 router.post("/order", (req, res) => {
+
     let delivery_adress_json = "lieferAdresse";
     let billing_adress_json = "rechnungsAdresse";
 
+    let delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
+    let billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
 
-    const delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
-    const billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
-
-    con.query(`Select adresse_index(?,?,?,?,?,?) ;`, [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort], (err, result) => {
-        if (err) console.log(err);
-        delivery_adress.id = getIdFromRow(result);
-        console.log(delivery_adress.id);
-    })
-    con.query(`Select adresse_index(?,?,?,?,?,?) ;`, [billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort], (err, result) => {
-        if (err) console.log(err);
-
-        billing_adress.id = getIdFromRow(result);
-        console.log(billing_adress.id);
-    })
-
-    try {
-        con.query(`Select p.id from Produkt p where p.name = ?;`, [req.body["bestellung"]["type"]], (err, result) => {
-            if (err) console.log(err);
-            console.log(getIdFromRow(result))
+    con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
+            billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort,
+            req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
+        (err, result) => {
+            if (err) {
+                console.log(err)
+                res.status(400)
+            } else {
+                res.status(202)
+            }
+            send(res);
         })
-    }catch (e) {
-        //TODO abort if error
-        // console.error(e)
-    }
-
-
-    //TODO create Order
-
-
-    console.log(req.body["lieferAdresse"].nachname)
-
-    // con.query("Insert into Auftrag () ")
-
-    //TODO use statuses
-    //TODO create in database
-    res.status(202)
-    // database.each(`Insert into`)
-    //TODO create order ID
-    res.send()
 });
 
 router.get("/order", (req, res) => {
@@ -75,11 +54,7 @@ router.get("/order", (req, res) => {
 function getIdFromRow(result) {
     // Jesus Christ our Savior and Lord please save us from Javascript
     // and cursed AF code
-    try {
-        return Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
-    } catch (e) {
-        // console.log(e)
-    }
+    return Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
 }
 
 module.exports = router;
