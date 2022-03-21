@@ -38,7 +38,6 @@ router.post("/order", (req, res) => {
             req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
         (err, result) => {
             if (err) {
-                console.log(err)
                 res.status(400)
             } else {
                 res.status(202)
