@@ -42,10 +42,6 @@ router.post("/order", (req, res) => {
         })
 });
 
-router.get("/order/status", (req, res) => {
-    res.json({"Status": "Fertig"})
-});
-
 router.get("/orders", (req, res) => {
     con.query('select * from Auftrag', (err, result) => {
         res.send(repairQuery(result))
@@ -58,6 +54,14 @@ router.get("/order", (req, res) => {
         res.send(repairQuery(result))
     })
 });
+
+router.get("/order/status", (req, res) => {
+    con.query('select status from Auftrag Where id = ?', [req.query["order"]], (err, result) => {
+        console.log(result)
+        res.send(repairQuery(result))
+    })
+});
+
 
 router.get("/products", (req, res) => {
     con.query('select * from Produkt', (err, result) => {

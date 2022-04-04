@@ -38,6 +38,16 @@ Return:
   * error: String 
 
 ## Get one Order
+GET: http://10.0.206.9:3000/api/order/status \
+Parameter:
+* order: int
+
+Return:
+* status: String \
+  z.B.: "offen"
+
+
+## Get one Order
 GET: http://10.0.206.9:3000/api/order \
 Parameter:
 
@@ -53,6 +63,7 @@ Return:
   "2022-04-04T07:03:11.000Z"
 * status: String \
 z.B.: "offen"
+
 
 ## Get all Orders
 GET: http://10.0.206.9:3000/api/order \
