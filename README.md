@@ -1,10 +1,38 @@
 # Webservice
 
+
 ## Server
+
 
 ## Create Order
 
+```yaml
+Head: http://10.0.206.9:3000/api/order/
+Body:
+  {"lieferAdresse": {
+    "vorname": "",
+    "nachname": "",
+    "strasse": "",
+    "nr": 1,
+    "plz": 12345,
+    "ort": ""
+  },
+  "rechnungsAdresse": {
+    "vorname": "",
+    "nachname": "",
+    "strasse": "",
+    "nr": 1,
+    "plz": 12345,
+    "ort": ""
+  },
+  "bestellung": {
+    "type": "A",
+    "anzahl": 1
+  }
+```
+
 ## Get Order
+
 
 ## Json
 
@@ -32,7 +60,6 @@
   },
   "datum": "2020-01-01",
   "status": ""
-}
 }
 ```
 
