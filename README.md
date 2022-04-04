@@ -37,7 +37,7 @@ Return:
 * On Error:
   * error: String 
 
-## Get one Order
+## Get Order Status
 GET: http://10.0.206.9:3000/api/order/status \
 Parameter:
 * order: int
