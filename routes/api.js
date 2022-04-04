@@ -21,10 +21,6 @@ router.get('/', function (req, res, next) {
 });
 
 
-function send(res) {
-    res.send()
-}
-
 router.post("/order", (req, res) => {
 
     let delivery_adress_json = "lieferAdresse";
@@ -38,22 +34,39 @@ router.post("/order", (req, res) => {
             req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
         (err, result) => {
             if (err) {
+                console.log(err)
                 res.status(400)
             } else {
                 res.status(202)
             }
-            send(res);
+            res.send
         })
 });
 
 router.get("/order", (req, res) => {
-    // res.json("Status" : )
+    res.json({"Status": "Fertig"})
 });
 
-function getIdFromRow(result) {
-    // Jesus Christ our Savior and Lord please save us from Javascript
-    // and cursed AF code
-    return Object.values(JSON.parse(JSON.stringify(result))[0]).toString();
+router.get("/orders", (req, res) => {
+    con.query('select * from Auftrag', (err, result) => {
+        res.send(repairQuery(result))
+    })
+});
+
+router.get("/order", (req, res) => {
+    con.query('select * from Auftrag Where id = ?', [req.body["id"]], (err, result) => {
+        res.send(repairQuery(result))
+    })
+});
+
+router.get("/products", (req, res) => {
+    con.query('select * from Produkt', (err, result) => {
+        res.send(repairQuery(result))
+    })
+});
+
+function repairQuery(sqlQuery) {
+    return JSON.parse(JSON.stringify(sqlQuery));
 }
 
 module.exports = router;
