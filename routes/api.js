@@ -36,16 +36,18 @@ router.post("/order", (req, res) => {
             req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
         (err, result) => {
             if (err) {
+                //TODO error checks
                 console.log(err)
                 res.status(400)
+                res.send()
             } else {
                 res.status(202)
+                res.send()
             }
-            res.send
         })
 });
 
-router.get("/order", (req, res) => {
+router.get("/order/status", (req, res) => {
     res.json({"Status": "Fertig"})
 });
 
@@ -56,7 +58,8 @@ router.get("/orders", (req, res) => {
 });
 
 router.get("/order", (req, res) => {
-    con.query('select * from Auftrag Where id = ?', [req.body["id"]], (err, result) => {
+    con.query('select * from Auftrag Where id = ?', [req.query["order"]], (err, result) => {
+        console.log(result)
         res.send(repairQuery(result))
     })
 });
