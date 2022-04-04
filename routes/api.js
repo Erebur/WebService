@@ -1,5 +1,3 @@
-
-
 const Adresse = require("../objects/adresse");
 
 const express = require('express');
@@ -36,13 +34,10 @@ router.post("/order", (req, res) => {
             req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
         (err, result) => {
             if (err) {
-                //TODO error checks
                 console.log(err)
-                res.status(400)
-                res.send()
+                res.status(400).json({error: err["sqlMessage"]}).send()
             } else {
-                res.status(202)
-                res.send()
+                res.status(202).json({id:Object.values(JSON.parse(JSON.stringify(result))[0]).toString()}).send()
             }
         })
 });

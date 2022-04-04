@@ -31,6 +31,11 @@ Body:
   }
 }
 ```
+Return:
+* On Success
+  * id: int 
+* On Error:
+  * error: String 
 
 ## Get one Order
 GET: http://10.0.206.9:3000/api/order \
