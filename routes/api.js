@@ -34,7 +34,6 @@ router.post("/order", (req, res) => {
             req.body["bestellung"]["type"], req.body["bestellung"]["anzahl"]],
         (err, result) => {
             if (err) {
-                console.log(err)
                 res.status(400).json({error: err["sqlMessage"]}).send()
             } else {
                 res.status(202).json({id:Object.values(JSON.parse(JSON.stringify(result))[0]).toString()}).send()
@@ -50,7 +49,6 @@ router.get("/orders", (req, res) => {
 
 router.get("/order", (req, res) => {
     con.query('select * from Auftrag Where id = ?', [req.query["order"]], (err, result) => {
-        console.log(result)
         res.send(repairQuery(result))
     })
 });

@@ -37,7 +37,7 @@ Return:
 * On Error:
   * error: String 
 
-## Get one Order
+## Get Order Status
 GET: http://10.0.206.9:3000/api/order/status \
 Parameter:
 * order: int
@@ -48,7 +48,7 @@ Return:
 
 
 ## Get one Order
-GET: http://10.0.206.9:3000/api/order \
+GET: http://10.0.206.9:3000/api/order?order=1 \
 Parameter:
 
 * order: int  
@@ -66,7 +66,7 @@ z.B.: "offen"
 
 
 ## Get all Orders
-GET: http://10.0.206.9:3000/api/order \
+GET: http://10.0.206.9:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben 
 
