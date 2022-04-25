@@ -1,12 +1,12 @@
 # Webservice
 
-
 ## Server
 
-
 ## Create Order
+
 POST: http://10.0.206.9:3000/api/order/ \
 Body:
+
 ```json5
 {
   "lieferAdresse": {
@@ -26,34 +26,40 @@ Body:
     "ort": ""
   },
   "bestellung": {
-    "type": "A",
-    "anzahl": 1
+      "A": 1,
+      "B": 5
   }
 }
 ```
+
 Return:
+
 * On Success
-  * id: int 
+    * id: int
 * On Error:
-  * error: String 
+    * error: String
 
 ## Get Order Status
+
 GET: http://10.0.206.9:3000/api/order/status \
 Parameter:
+
 * order: int
 
 Return:
+
 * status: String \
   z.B.: "offen"
 
-
 ## Get one Order
+
 GET: http://10.0.206.9:3000/api/order?order=1 \
 Parameter:
 
-* order: int  
+* order: int
 
 Return:
+
 * id: int
 * liefer_adresse_id: int
 * rechnungs_adresse_id: int
@@ -62,23 +68,26 @@ Return:
 * eingang: yyy-mm-ddThh:mm:ss.000Z\
   "2022-04-04T07:03:11.000Z"
 * status: String \
-z.B.: "offen"
-
+  z.B.: "offen"
 
 ## Get all Orders
+
 GET: http://10.0.206.9:3000/api/orders \
 Datenschutz deluxe \
-Liste mit allen vorhandenen Aufträgen wie oben 
+Liste mit allen vorhandenen Aufträgen wie oben
 
 ## Get Products
+
 GET: http://10.0.206.9:3000/api/products \
-übergibt alle produkte 
+übergibt alle produkte
+
 * id: int
-* name: Char 
+* name: Char
 * beschreibung: String
 * preis: int
 
 ---
+
 # Log
 
 ## 2022-02-21
