@@ -97,8 +97,10 @@ Body:
 }
 ```
 
+## Get orders from user
+GET: http://10.0.206.9:3000/api/user/orders?user=1 \
+[//]: # (todo)
 ---
-
 # Log
 
 ## 2022-02-21
