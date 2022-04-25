@@ -78,6 +78,17 @@ GET: http://10.0.206.9:3000/api/products \
 * beschreibung: String
 * preis: int
 
+## Create User
+POST: http://10.0.206.9:3000/api/user/create \
+Erstellt einen neuen User
+Body:
+```json5
+{
+  username: "name",
+  password: "Safe@Password 5"
+}
+```
+
 ---
 # Log
 
