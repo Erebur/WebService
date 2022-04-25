@@ -1,18 +1,10 @@
+const con = require("../objects/DBconnection");
+
 const Adresse = require("../objects/adresse");
 
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-
-const con = mysql.createConnection({
-    //TODO extract this
-    host: "devel1", user: "root", password: "the27", database: "Carlos"
-});
-
-con.connect(function (err) {
-    if (err) console.log(err)
-    else console.log("Connected!")
-});
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -41,9 +33,10 @@ router.post("/order", (req, res) => {
     } else {
         let ids = [];
         for (const type in req.body["bestellung"]) {
-            con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
+            con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
                     billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort,
                     type, req.body["bestellung"][type]],
+                //todo user_id
                 (err, result) => {
                     if (err) {
                         ids.push(-1)
