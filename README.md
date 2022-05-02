@@ -28,7 +28,9 @@ Body:
   "bestellung": {
       "A": 1,
       "B": 5
-  }
+  },
+  "token":"2abeebeba4" ,
+  "_token_comment": "token ist optional"
 }
 ```
 
@@ -70,6 +72,9 @@ Return:
 * status: String \
   z.B.: "offen"
 
+## Get orders from user
+GET: http://10.0.206.9:3000/api/user/orders?token=2abeebeba4 \
+[//]: # (todo)
 ## Get all Orders
 
 GET: http://10.0.206.9:3000/api/orders \
@@ -96,10 +101,22 @@ Body:
   password: "Safe@Password 5"
 }
 ```
+## Login
+POST: http://10.0.206.9:3000/api/user/login \
+Gibt einen Token zurück
+und gibt Status bei Veränderungen zurück
+Body:
+```json5
+{
+  "username": "User",
+  "password": "PW",
+  "token_duration":120
+}
+```
+return
+* token: String(10)
+* status: "Token updated" / ""
 
-## Get orders from user
-GET: http://10.0.206.9:3000/api/user/orders?user=1 \
-[//]: # (todo)
 ---
 # Log
 
@@ -122,3 +139,7 @@ Aufträge können erstellt werden
 ## 2022-04-04
 
 Routen erstellt und Doku geschrieben
+
+## 2022-05-02
+
+Login System erstellt
