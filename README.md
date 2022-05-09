@@ -1,7 +1,4 @@
-# Webservice
-
-## Server
-
+# Webservice 
 ## Create Order
 
 POST: http://10.0.206.9:3000/api/order/ \
@@ -73,7 +70,7 @@ Return:
   z.B.: "offen"
 
 ## Get orders from user
-GET: http://10.0.206.9:3000/api/user/orders?token=2abeebeba4 \
+GET: http://10.0.206.9:3000/api/user/orders?token=?????????? \
 [//]: # (todo)
 ## Get all Orders
 
@@ -116,7 +113,11 @@ Body:
 return
 * token: String(10)
 * status: "Token updated" / ""
-
+---
+## Wichtige Hinweise
+* Die eingangszeit wird in UTC gespeichert und zurückgegeben
+  * ```2022-01-01T00:00:00.000Z```
+  * Z am Ende steht für UTC → muss umgewandelt werden 
 ---
 # Log
 
