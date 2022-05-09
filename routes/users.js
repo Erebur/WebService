@@ -4,13 +4,6 @@ const con = require("../objects/DBconnection");
 const crypto = require("crypto")
 const token_valid_time = 1000;
 
-async function checktoken(token) {
-    return new Promise((resolve, reject) => {
-        con.query('select UNIX_TIMESTAMP(expiration_date) ed from `Users` where  API_TOKEN = ?', [token], (error, result) => resolve(
-            !!(repairQuery(result)[0] && new Date(repairQuery(result)[0]["ed"] * token_valid_time) > Date.now())
-        ))
-    })
-}
 
 router.post('/login', (req, res) => {
     con.query('SELECT API_TOKEN,UNIX_TIMESTAMP(expiration_date) ed FROM `Users` WHERE Username = ? AND Password = ?',
@@ -49,13 +42,10 @@ router.get('/orders', function (req, res, next) {
             })
             return
         }
-        res.sendStatus(400)
+        res.send([])
 
     })
 });
 
-function repairQuery(sqlQuery) {
-    return JSON.parse(JSON.stringify(sqlQuery));
-}
 
 module.exports = router;
