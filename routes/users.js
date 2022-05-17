@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const con = require("../objects/DBconnection");
 const crypto = require("crypto")
-const token_valid_time = 1000;
 
 
 router.post('/login', (req, res) => {
@@ -10,7 +9,7 @@ router.post('/login', (req, res) => {
         [req.body["username"], req.body["password"]],
         (error, result) => {
             if (repairQuery(result)[0]) {
-                let ed = new Date(repairQuery(result)[0]["ed"] * token_valid_time), token;
+                let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
                 if (ed > Date.now()) {
                     token = repairQuery(result)[0]["API_TOKEN"]
                     res.status(200).json({"token": token}).send()
@@ -43,7 +42,6 @@ router.get('/orders', function (req, res, next) {
             return
         }
         res.send([])
-
     })
 });
 

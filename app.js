@@ -29,7 +29,7 @@ global.repairQuery = function (sqlQuery) {
 global.checktoken = async function (token) {
     return new Promise((resolve, reject) => {
         con.query('select UNIX_TIMESTAMP(expiration_date) ed from `Users` where  API_TOKEN = ?', [token], (error, result) => resolve(
-            !!(repairQuery(result)[0] && new Date(repairQuery(result)[0]["ed"] * token_valid_time) > Date.now())
+            (repairQuery(result)[0] && new Date(repairQuery(result)[0]["ed"] * 1000).getTime() > Date.now())
         ))
     })
 }

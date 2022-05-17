@@ -1,6 +1,5 @@
 const con = require("../objects/DBconnection");
 
-
 const Adresse = require("../objects/adresse");
 const express = require('express');
 const router = express.Router();
@@ -10,7 +9,7 @@ router.get('/', function (req, res, next) {
     res.render('index', {title: 'Express'});
 });
 
-router.post("/order", (req, res) => {
+router.post("/order", async (req, res) => {
     let delivery_adress_json = "lieferAdresse";
     let billing_adress_json = "rechnungsAdresse";
 
@@ -22,25 +21,44 @@ router.post("/order", (req, res) => {
         return
     }
 
+    checktoken(req.body["token"]).then(token_valid => {
+        test = async function(){
+            return new Promise((resolve, reject) => {
+                let ids = [];
+                let i = 0
+                for (const type in req.body["bestellung"]) {
+                    con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
+                            billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort,
+                            type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"],
+                        (err, result) => {
 
-    let ids = [];
-    for (const type in req.body["bestellung"]) {
-        con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
-                billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort,
-                type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"],
+                            if (err) {
+                                // ids.push(-1)
+                            } else {
+                                ids.push(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
+                                console.log(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
+                            }
+                            if (i === Object.values(req.body["bestellung"]).length -1){
+                                resolve(ids)
+                            }
+                            i++;
+                        }
+                    )
 
-            (err, result) => {
-                if (err) {
-                    ids.push(-1)
-                } else {
-                    ids.push(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
                 }
-            }
-        )
-    }
+            })
+        }
 
-    //todo send id's back
-    res.status(200).send()
+
+        test().then(value => {
+            console.log(value)
+            res.status(200)
+            if (!token_valid) {
+                res.status(401)
+            }
+            res.send(value)
+        })
+    })
 
 })
 
