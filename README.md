@@ -112,6 +112,7 @@ return
 * Die eingangszeit wird in UTC gespeichert und zurückgegeben
   * ```2022-01-01T00:00:00.000Z```
   * Z am Ende steht für UTC → muss umgewandelt werden 
+* Der Server läuft jetzt auch auf devel1:3000 
 ---
 # Log
 
