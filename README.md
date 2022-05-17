@@ -26,17 +26,11 @@ Body:
       "A": 1,
       "B": 5
   },
-  "token":"2abeebeba4" ,
-  "_token_comment": "token ist optional"
+  "token":"??????????" ,
+  "_token_comment": "token ist optional//bei falschen token 401"
 }
 ```
 
-Return:
-
-* On Success
-    * id: int
-* On Error:
-    * error: String
 
 ## Get Order Status
 
