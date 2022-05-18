@@ -22,7 +22,7 @@ router.post("/order", async (req, res) => {
     }
 
     checktoken(req.body["token"]).then(token_valid => {
-        test = async function(){
+        waitForAnswer = async function(){
             return new Promise((resolve, reject) => {
                 let ids = [];
                 let i = 0
@@ -50,7 +50,7 @@ router.post("/order", async (req, res) => {
         }
 
 
-        test().then(value => {
+        waitForAnswer().then(value => {
             console.log(value)
             res.status(200)
             if (!token_valid) {
