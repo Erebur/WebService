@@ -1,7 +1,13 @@
 # Webservice 
+
+## Wichtige Hinweise
+* Die eingangszeit wird in UTC gespeichert und zurückgegeben
+  * ```2022-01-01T00:00:00.000Z```
+  * Z am Ende steht für UTC → muss umgewandelt werden 
+* Der Server läuft jetzt auch auf devel1:3000 
 ## Create Order
 
-POST: http://10.0.206.9:3000/api/order/ \
+POST: http://devel1:3000/api/order/ \
 Body:
 
 ```json5
@@ -34,7 +40,7 @@ Body:
 
 ## Get Order Status
 
-GET: http://10.0.206.9:3000/api/order/status \
+GET: http://devel1:3000/api/order/status \
 Parameter:
 
 * order: int
@@ -46,7 +52,7 @@ Return:
 
 ## Get one Order
 
-GET: http://10.0.206.9:3000/api/order?order=1 \
+GET: http://devel1:3000/api/order?order=1 \
 Parameter:
 
 * order: int
@@ -64,17 +70,17 @@ Return:
   z.B.: "offen"
 
 ## Get orders from user
-GET: http://10.0.206.9:3000/api/user/orders?token=?????????? \
+GET: http://devel1:3000/api/user/orders?token=?????????? \
 [//]: # (todo)
 ## Get all Orders
 
-GET: http://10.0.206.9:3000/api/orders \
+GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
 
 ## Get Products
 
-GET: http://10.0.206.9:3000/api/products \
+GET: http://devel1:3000/api/products \
 übergibt alle produkte
 
 * id: int
@@ -83,7 +89,7 @@ GET: http://10.0.206.9:3000/api/products \
 * preis: int
 
 ## Create User
-POST: http://10.0.206.9:3000/api/user/create \
+POST: http://devel1:3000/api/user/create \
 Erstellt einen neuen User
 Body:
 ```json5
@@ -93,7 +99,7 @@ Body:
 }
 ```
 ## Login
-POST: http://10.0.206.9:3000/api/user/login \
+POST: http://devel1:3000/api/user/login \
 Gibt einen Token zurück
 und gibt Status bei Veränderungen zurück
 Body:
@@ -107,12 +113,6 @@ Body:
 return
 * token: String(10)
 * status: "Token updated" / ""
----
-## Wichtige Hinweise
-* Die eingangszeit wird in UTC gespeichert und zurückgegeben
-  * ```2022-01-01T00:00:00.000Z```
-  * Z am Ende steht für UTC → muss umgewandelt werden 
-* Der Server läuft jetzt auch auf devel1:3000 
 ---
 # Log
 
