@@ -33,17 +33,5 @@ router.post('/create', function (req, res, next) {
     })
 });
 
-router.get('/orders', function (req, res, next) {
-    checktoken(req.query["token"]).then(r => {
-        if (r) {
-            con.query('select * from Auftrag where user_id = (select u.id from Users u WHERE u.API_TOKEN = ?)', [req.query["token"]], (err, result) => {
-                res.send(repairQuery(result))
-            })
-            return
-        }
-        res.send([])
-    })
-});
-
 
 module.exports = router;

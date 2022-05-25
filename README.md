@@ -69,14 +69,15 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## Get orders from user
-GET: http://devel1:3000/api/user/orders?token=?????????? \
-[//]: # (todo)
 ## Get all Orders
 
 GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
+
+## Get orders from user
+GET: http://devel1:3000/api/orders?token= \
+Get all orders nach user gefiltert 
 
 ## Get Products
 

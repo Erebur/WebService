@@ -62,10 +62,17 @@ router.post("/order", async (req, res) => {
 
 })
 
-
 router.get("/orders", (req, res) => {
-    con.query('select * from Auftrag', (err, result) => {
-        res.send(repairQuery(result))
+    checktoken(req.query["token"]).then(r => {
+        if (r) {
+            con.query('select * from Auftrag where user_id = (select u.id from Users u WHERE u.API_TOKEN = ?)', [req.query["token"]], (err, result) => {
+                res.send(repairQuery(result))
+            })
+        }else {
+            con.query('select * from Auftrag', (err, result) => {
+                res.send(repairQuery(result))
+            })
+        }
     })
 });
 
