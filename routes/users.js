@@ -14,7 +14,6 @@ router.post('/login', (req, res) => {
         [req.body["username"], req.body["password"]],
         (error, result) => {
             if (repairQuery(result)[0]) {
-                console.log(repairQuery(result))
                 //test Password Hash
                 bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function(error, response) {
                     if (response){
@@ -43,7 +42,6 @@ router.post('/create', function (req, res, next) {
     let token = crypto.randomUUID()
     token = token.replace(/-/g, '').substring(0, 10)
     bcrypt.hash(req.body["password"],saltRounds ,(err , hash)=>{
-        console.log(hash)
         con.query('select create_user(?,?,?)', [req.body["username"],hash, token], (err, result) => {
             res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
         })
