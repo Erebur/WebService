@@ -70,7 +70,6 @@ Return:
   z.B.: "offen"
 
 ## Get all Orders
-
 GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
@@ -80,7 +79,6 @@ GET: http://devel1:3000/api/orders?token= \
 Get all orders nach user gefiltert 
 
 ## Get Products
-
 GET: http://devel1:3000/api/products \
 übergibt alle produkte
 
@@ -95,10 +93,11 @@ Erstellt einen neuen User
 Body:
 ```json5
 {
-  username: "name",
-  password: "Safe@Password 5"
+  "username": "name",
+  "password": "Safe@Password 5"
 }
 ```
+
 ## Login
 POST: http://devel1:3000/api/user/login \
 Gibt einen Token zurück
