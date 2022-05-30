@@ -16,11 +16,6 @@ router.post("/order", async (req, res) => {
     try {
         let delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
         let billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
-    }catch (TypeError){
-        res.status(400)
-        res.send({"message" : "Json not valid"})
-        return
-    }
 
     if (req.body["bestellung"]["type"]) {
         res.sendStatus(418)
@@ -55,7 +50,6 @@ router.post("/order", async (req, res) => {
             })
         }
 
-
         waitForAnswer().then(value => {
             console.log(value)
             res.status(200)
@@ -65,7 +59,10 @@ router.post("/order", async (req, res) => {
             res.send(value)
         })
     })
-
+    }catch (TypeError){
+        res.status(400)
+        res.send({"message" : "Json not valid"})
+    }
 })
 
 router.get("/orders", (req, res) => {
