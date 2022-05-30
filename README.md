@@ -4,12 +4,13 @@
 * Die eingangszeit wird in UTC gespeichert und zurückgegeben
   * ```2022-01-01T00:00:00.000Z```
   * Z am Ende steht für UTC → muss umgewandelt werden 
-* Der Server läuft jetzt auch auf devel1:3000 
+* Der Server läuft jetzt auch auf devel1:3000
 ## Create Order
 
-POST: http://devel1:3000/api/order/ \
-Body:
+### w/ Adresse
 
+POST: http://devel1:3000/api/order/ \
+Body: 
 ```json5
 {
   "lieferAdresse": {
@@ -36,8 +37,26 @@ Body:
   "_token_comment": "token ist optional//bei falschen token 401"
 }
 ```
+return: [id1,id2]
 
+### wo/ Adresse
 
+POST: http://devel1:3000/api/order/ \
+Body: 
+```json5
+{
+  "bestellung": {
+      "A": 1,
+      "B": 5
+  },
+  "token":"??????????" 
+}
+```
+return: [id1,id2] \
+token ist hier nicht mehr optional
+
+### Messages 
+Bei Fehlern wird ein header mit weiteren informationen angefügt 
 ## Get Order Status
 
 GET: http://devel1:3000/api/order/status \
@@ -69,7 +88,7 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## Get all Orders
+## ~~Get all Orders~~
 GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
@@ -139,3 +158,7 @@ Routen erstellt und Doku geschrieben
 ## 2022-05-02
 
 Login System erstellt
+
+## 2022-05-25
+
+created Password hashing
