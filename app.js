@@ -36,11 +36,9 @@ global.checktoken = async function (token) {
     })
 }
 
-
 app.use('/', indexRouter);
 app.use('/api/user', usersRouter);
 app.use('/api', apiRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
