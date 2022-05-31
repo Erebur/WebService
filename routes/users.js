@@ -43,7 +43,7 @@ router.post('/create', function (req, res, next) {
     bcrypt.hash(req.body["password"], saltRounds, (err, hash) => {
         con.query('select create_user(?,?,?)', [req.body["username"], hash, token], (err, result) => {
             if (err)
-                res.sendStatus(402)
+                res.sendStatus(409)
             else
                 res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
         })
