@@ -106,7 +106,8 @@ GET: http://devel1:3000/api/products \
 * beschreibung: String
 * preis: int
 
-## Create User
+## Authentication
+### Create User
 POST: http://devel1:3000/api/user/create \
 Erstellt einen neuen User
 Body:
@@ -116,8 +117,12 @@ Body:
   "password": "Safe@Password 5"
 }
 ```
+return:
+* token : String(10)
+Status:
+* 409: User existiert 
 
-## Login
+#### Login
 POST: http://devel1:3000/api/user/login \
 Gibt einen Token zurück
 und gibt Status bei Veränderungen zurück
