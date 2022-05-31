@@ -15,8 +15,8 @@ router.post('/login', (req, res) => {
         (error, result) => {
             if (repairQuery(result)[0]) {
                 //test Password Hash
-                bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function(error, response) {
-                    if (response){
+                bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function (error, response) {
+                    if (response) {
                         let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
                         if (ed > Date.now()) {
                             token = repairQuery(result)[0]["API_TOKEN"]
@@ -27,11 +27,11 @@ router.post('/login', (req, res) => {
                             con.query('Update Users set API_TOKEN = ? ,expiration_date = date_add(current_timestamp, interval ? minute)  where Username = ?', [token, req.body["token_duration"] ? req.body["token_duration"] : 10, req.body["username"]])
                             res.status(200).json({"token": token, "status": "Token updated"}).send()
                         }
-                    }else {
+                    } else {
                         res.status(401).send()
                     }
                 });
-            }else {
+            } else {
                 res.status(401).send()
             }
 
@@ -41,9 +41,12 @@ router.post('/login', (req, res) => {
 router.post('/create', function (req, res, next) {
     let token = crypto.randomUUID()
     token = token.replace(/-/g, '').substring(0, 10)
-    bcrypt.hash(req.body["password"],saltRounds ,(err , hash)=>{
-        con.query('select create_user(?,?,?)', [req.body["username"],hash, token], (err, result) => {
-            res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
+    bcrypt.hash(req.body["password"], saltRounds, (err, hash) => {
+        con.query('select create_user(?,?,?)', [req.body["username"], hash, token], (err, result) => {
+            if (err)
+                res.sendStatus(402)
+            else
+                res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
         })
     })
 });
