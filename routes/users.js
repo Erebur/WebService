@@ -3,7 +3,6 @@ const router = express.Router();
 const con = require("../objects/DBconnection");
 const crypto = require("crypto")
 const bcrypt = require('bcrypt')
-const {hash} = require("bcrypt");
 const saltRounds = 10;
 
 
@@ -51,4 +50,17 @@ router.post('/create', function (req, res, next) {
     })
 });
 
+router.get('/address', (req, res) => {
+    checktoken(req.query["token"]).then(value => {
+        if (value) {
+            con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.query["token"]],
+                (err, result) => {
+                    res.status(200)
+                    res.send(repairQuery(result)[0])
+                })
+        } else {
+            res.sendStatus(401)
+        }
+    })
+})
 module.exports = router;
