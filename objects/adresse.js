@@ -1,4 +1,4 @@
-const Adresse = class{
+const Adresse = class {
     get vorname() {
         return this._vorname;
     }
@@ -31,7 +31,7 @@ const Adresse = class{
         this._id = value;
     }
 
-    constructor(vorname, nachname, strasse, nr, plz, ort ,id) {
+    constructor(vorname, nachname, strasse, nr, plz, ort, id) {
         this._vorname = vorname;
         this._nachname = nachname;
         this._strasse = strasse;
@@ -40,5 +40,10 @@ const Adresse = class{
         this._ort = ort;
         this._id = id;
     }
+
+    atribsAsArray() {
+        return [this.vorname, this.nachname, this.strasse, this.nr, this.plz, this.ort]
+    }
+
 }
 module.exports = Adresse

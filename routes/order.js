@@ -16,22 +16,17 @@ router.post("/order", async (req, res) => {
             let ids = [];
             let i = 0
             for (const type in req.body["bestellung"]) {
-                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort,
-                        billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort,
-                        type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"],
-                    (err, result) => {
-
-                        if (err) {
-                            // ids.push(-1)
-                        } else {
-                            ids.push(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
-                        }
-                        if (i === Object.values(req.body["bestellung"]).length - 1) {
-                            resolve(ids)
-                        }
-                        i++;
+                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort, billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"], (err, result) => {
+                    if (err) {
+                        // ids.push(-1)
+                    } else {
+                        ids.push(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
                     }
-                )
+                    if (i === Object.values(req.body["bestellung"]).length - 1) {
+                        resolve(ids)
+                    }
+                    i++;
+                })
 
             }
         })
@@ -47,7 +42,7 @@ router.post("/order", async (req, res) => {
     }
     if (req.body["bestellung"]["type"]) {
         //check if someone uses the old format
-        res.append("message" , "format deprecated")
+        res.append("message", "format deprecated")
         res.sendStatus(301)
         return
     }
@@ -58,37 +53,42 @@ router.post("/order", async (req, res) => {
             //TODO Addresses are not nullable
             let delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
             let billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
-            waitForIds(delivery_adress, billing_adress).then(value => {
-                res.status(200)
-                if (!token_valid) {
-                    //we decided to save the orders even if the token is invalid
-                    res.status(401)
-                    res.append("message" , "token invalid")
-                }
-                res.send(value)
-            })
+
+            // Checks that each attribute has a value
+            if (delivery_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
+                billing_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
+                res.status(401).append("message", "Adresse nicht vollständig").send()
+            } else {
+                waitForIds(delivery_adress, billing_adress).then(value => {
+                    res.status(200)
+                    if (!token_valid) {
+                        //we decided to save the orders even if the token is invalid
+                        res.status(401)
+                        res.append("message", "token invalid")
+                    }
+                    res.send(value)
+                })
+            }
         } else {
             if (token_valid) {
-                con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]],
-                    (err, result) => {
-                        let repairQueryElement = repairQuery(result)[0]
-                        if (repairQueryElement) {
-                            let delivery_adress = new Adresse(repairQueryElement["vorname"], repairQueryElement["nachname"], repairQueryElement["strasse"], repairQueryElement["hausnummer"], repairQueryElement["postleitzahl"], repairQueryElement["ort"]);
-                            waitForIds(delivery_adress, delivery_adress).then(value => {
-                                res.status(200)
-                                res.send(value)
-                            })
-                        } else {
-                            res.status(401)
-                            res.append("message" , "no default address for user")
-                            res.send()
-                        }
+                con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]], (err, result) => {
+                    let repairQueryElement = repairQuery(result)[0]
+                    if (repairQueryElement) {
+                        let delivery_adress = new Adresse(repairQueryElement["vorname"], repairQueryElement["nachname"], repairQueryElement["strasse"], repairQueryElement["hausnummer"], repairQueryElement["postleitzahl"], repairQueryElement["ort"]);
+                        waitForIds(delivery_adress, delivery_adress).then(value => {
+                            res.status(200)
+                            res.send(value)
+                        })
+                    } else {
+                        res.status(401)
+                        res.append("message", "no default address for user")
+                        res.send()
                     }
-                )
+                })
             } else {
                 //if the token is invalid we won't find a default address for the user
                 res.status(400)
-                res.append("message" , "token invalid, cannot get address")
+                res.append("message", "token invalid, cannot get address")
                 res.send()
             }
 
