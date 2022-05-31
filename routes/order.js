@@ -53,18 +53,22 @@ router.post("/order", async (req, res) => {
             //TODO Addresses are not nullable
             let delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
             let billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
-            if (delivery_adress.atribsAsArray().stream.filter(e => e.toString().length !== 0).length !== 6 && billing_adress.atribsAsArray().stream.filter(e => e.toString().length !== 0).length !== 6) {
+
+            // Checks that each attribute has a value
+            if (delivery_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
+                billing_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
                 res.status(401).append("message", "Adresse nicht vollständig").send()
+            } else {
+                waitForIds(delivery_adress, billing_adress).then(value => {
+                    res.status(200)
+                    if (!token_valid) {
+                        //we decided to save the orders even if the token is invalid
+                        res.status(401)
+                        res.append("message", "token invalid")
+                    }
+                    res.send(value)
+                })
             }
-            waitForIds(delivery_adress, billing_adress).then(value => {
-                res.status(200)
-                if (!token_valid) {
-                    //we decided to save the orders even if the token is invalid
-                    res.status(401)
-                    res.append("message", "token invalid")
-                }
-                res.send(value)
-            })
         } else {
             if (token_valid) {
                 con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]], (err, result) => {
