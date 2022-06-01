@@ -18,7 +18,7 @@ router.post("/order", async (req, res) => {
             let ids = [];
             let i = 0
             for (const type in req.body["bestellung"]) {
-                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_address.vorname, delivery_address.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_address.ort, billing_address.vorname, billing_address.nachname, billing_address.strasse, billing_address.nr, billing_address.plz, billing_address.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"], (err, result) => {
+                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_address.vorname, delivery_address.nachname, delivery_address.strasse, delivery_address.nr, delivery_address.plz, delivery_address.ort, billing_address.vorname, billing_address.nachname, billing_address.strasse, billing_address.nr, billing_address.plz, billing_address.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"], (err, result) => {
                     if (err) {
                         // ids.push(-1)
                     } else {
@@ -34,8 +34,8 @@ router.post("/order", async (req, res) => {
         })
     }
 
-    let delivery_adress_json = "lieferAdresse";
-    let billing_adress_json = "rechnungsAdresse";
+    let delivery_address_json = "lieferAdresse";
+    let billing_address_json = "rechnungsAdresse";
     //if there is no order we just abort the transaktion
     if (!req.body["bestellung"]) {
         res.status(400)
@@ -53,10 +53,10 @@ router.post("/order", async (req, res) => {
 
     checktoken(req.body["token"]).then(token_valid => {
         //if there is no delivery address we assume, we have an address saved already
-        if (req.body[delivery_adress_json]) {
+        if (req.body[delivery_address_json]) {
             //TODO Addresses are not nullable
-            let delivery_adress = new Adresse(req.body[delivery_adress_json]["vorname"], req.body[delivery_adress_json]["nachname"], req.body[delivery_adress_json]["strasse"], req.body[delivery_adress_json]["nr"], req.body[delivery_adress_json]["plz"], req.body[delivery_adress_json]["ort"]);
-            let billing_adress = new Adresse(req.body[billing_adress_json]["vorname"], req.body[billing_adress_json]["nachname"], req.body[billing_adress_json]["strasse"], req.body[billing_adress_json]["nr"], req.body[billing_adress_json]["plz"], req.body[billing_adress_json]["ort"]);
+            let delivery_adress = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"], req.body[delivery_address_json]["ort"]);
+            let billing_adress = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
 
             // Checks that each attribute has a value
             if (delivery_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
