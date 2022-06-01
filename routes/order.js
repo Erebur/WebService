@@ -10,8 +10,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/order", async (req, res) => {
-    console.log(req)
-    console.log(req.body)
+    // console.log(req)
+    // console.log(req.body)
     //waits for the last query to be completed and returns the Ids
     let waitForIds = async function (delivery_address, billing_address) {
         return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ router.post("/order", async (req, res) => {
         res.status(400)
         res.append("message", "Json not valid")
         res.send({"message": "Json not valid"})
-        console.log(res)
+        // console.log(res)
         return
     }
     if (req.body["bestellung"]["type"]) {
