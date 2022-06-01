@@ -57,7 +57,8 @@ token ist hier nicht mehr optional
 
 ### Messages 
 Bei Fehlern wird ein header mit weiteren informationen angefügt 
-## Get Order Status
+## Orders 
+### Status
 
 GET: http://devel1:3000/api/order/status \
 Parameter:
@@ -69,7 +70,7 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## Get one Order
+### Get one Order
 
 GET: http://devel1:3000/api/order?order=1 \
 Parameter:
@@ -88,12 +89,12 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## ~~Get all Orders~~
+### ~~Get all Orders~~
 GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
 
-## Get orders from user
+### Get orders from user
 GET: http://devel1:3000/api/orders?token= \
 Get all orders nach user gefiltert 
 
@@ -122,6 +123,24 @@ GET: http://devel1:3000/api/products \
 * name: Char
 * beschreibung: String
 * preis: int
+## Standard Adresse 
+### Get 
+GET: http://devel1:3000/api/user/address
+Query Params :
+* token : string[10]
+return : 
+``` json5 
+{
+  vorname: "",
+  nachname: "",
+  strasse: ,
+  hausnummer: ,
+  postleitzahl: ,
+  ort: "D"
+}
+```
+### Set 
+Post : http://devel1:3000/api/user/address
 
 ## Authentication
 ### Create User
