@@ -39,6 +39,7 @@ router.post("/order", async (req, res) => {
     //if there is no order we just abort the transaktion
     if (!req.body["bestellung"]) {
         res.status(400)
+        res.append("message", "Json not valid")
         res.send({"message": "Json not valid"})
         return
     }
