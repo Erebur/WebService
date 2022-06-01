@@ -10,6 +10,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/order", async (req, res) => {
+    console.log(req)
+    console.log(req.body)
     //waits for the last query to be completed and returns the Ids
     let waitForIds = async function (delivery_address, billing_address) {
         return new Promise((resolve, reject) => {
