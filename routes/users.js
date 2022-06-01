@@ -3,7 +3,6 @@ const router = express.Router();
 const con = require("../objects/DBconnection");
 const crypto = require("crypto")
 const bcrypt = require('bcrypt')
-const {hash} = require("bcrypt");
 const saltRounds = 10;
 
 
@@ -15,8 +14,8 @@ router.post('/login', (req, res) => {
         (error, result) => {
             if (repairQuery(result)[0]) {
                 //test Password Hash
-                bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function(error, response) {
-                    if (response){
+                bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function (error, response) {
+                    if (response) {
                         let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
                         if (ed > Date.now()) {
                             token = repairQuery(result)[0]["API_TOKEN"]
@@ -27,11 +26,11 @@ router.post('/login', (req, res) => {
                             con.query('Update Users set API_TOKEN = ? ,expiration_date = date_add(current_timestamp, interval ? minute)  where Username = ?', [token, req.body["token_duration"] ? req.body["token_duration"] : 10, req.body["username"]])
                             res.status(200).json({"token": token, "status": "Token updated"}).send()
                         }
-                    }else {
+                    } else {
                         res.status(401).send()
                     }
                 });
-            }else {
+            } else {
                 res.status(401).send()
             }
 
@@ -41,11 +40,27 @@ router.post('/login', (req, res) => {
 router.post('/create', function (req, res, next) {
     let token = crypto.randomUUID()
     token = token.replace(/-/g, '').substring(0, 10)
-    bcrypt.hash(req.body["password"],saltRounds ,(err , hash)=>{
-        con.query('select create_user(?,?,?)', [req.body["username"],hash, token], (err, result) => {
-            res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
+    bcrypt.hash(req.body["password"], saltRounds, (err, hash) => {
+        con.query('select create_user(?,?,?)', [req.body["username"], hash, token], (err, result) => {
+            if (err)
+                res.sendStatus(409)
+            else
+                res.send({token: (Object.values(JSON.parse(JSON.stringify(result))[0]).toString() !== "0" ? token : "invalid")})
         })
     })
 });
 
+router.get('/address', (req, res) => {
+    checktoken(req.query["token"]).then(value => {
+        if (value) {
+            con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.query["token"]],
+                (err, result) => {
+                    res.status(200)
+                    res.send(repairQuery(result)[0])
+                })
+        } else {
+            res.sendStatus(401)
+        }
+    })
+})
 module.exports = router;

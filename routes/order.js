@@ -10,13 +10,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/order", async (req, res) => {
+    console.log(req)
+    console.log(req.body)
     //waits for the last query to be completed and returns the Ids
-    let waitForIds = async function (delivery_adress, billing_adress) {
+    let waitForIds = async function (delivery_address, billing_address) {
         return new Promise((resolve, reject) => {
             let ids = [];
             let i = 0
             for (const type in req.body["bestellung"]) {
-                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_adress.vorname, delivery_adress.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_adress.ort, billing_adress.vorname, billing_adress.nachname, billing_adress.strasse, billing_adress.nr, billing_adress.plz, billing_adress.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"], (err, result) => {
+                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_address.vorname, delivery_address.nachname, delivery_adress.strasse, delivery_adress.nr, delivery_adress.plz, delivery_address.ort, billing_address.vorname, billing_address.nachname, billing_address.strasse, billing_address.nr, billing_address.plz, billing_address.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"], (err, result) => {
                     if (err) {
                         // ids.push(-1)
                     } else {
@@ -37,6 +39,7 @@ router.post("/order", async (req, res) => {
     //if there is no order we just abort the transaktion
     if (!req.body["bestellung"]) {
         res.status(400)
+        res.append("message", "Json not valid")
         res.send({"message": "Json not valid"})
         return
     }
