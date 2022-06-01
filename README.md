@@ -97,6 +97,23 @@ Liste mit allen vorhandenen Aufträgen wie oben
 GET: http://devel1:3000/api/orders?token= \
 Get all orders nach user gefiltert 
 
+## Add address to user
+POST: http://devel1:3000/api/user/address
+
+Speichert eine Adresse zu dem eingegebenen User
+
+```json5
+{
+  "vorname":"",
+  "nachname":"",
+  "strasse":"",
+  "hausnummer":"",
+  "plz":"",
+  "ort":"",
+  "token":""
+}
+```
+
 ## Get Products
 GET: http://devel1:3000/api/products \
 übergibt alle produkte
