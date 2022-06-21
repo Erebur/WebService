@@ -67,6 +67,11 @@ router.get('/address', (req, res) => {
 router.post('/address', (req, res) => {
     con.query("Select add_address_to_user(?,?,?,?,?,?,?)", [req.body["vorname"], req.body["nachname"], req.body["strasse"], req.body["hausnummer"], req.body["plz"], req.body["ort"], req.body["token"]],
         (err, result) => {
+            if (err) {
+                res.append("err", err)
+                res.sendStatus(400)
+                return
+            }
             if (Object.values(repairQuery(result)[0]).toString() === "1") {
                 res.sendStatus(200)
             } else res.status(401).send("Token not found")

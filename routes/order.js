@@ -4,11 +4,6 @@ const Adresse = require("../objects/adresse");
 const express = require('express');
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Express'});
-});
-
 router.post("/order", async (req, res) => {
     // console.log(req)
     // console.log(req.body)
@@ -46,24 +41,23 @@ router.post("/order", async (req, res) => {
     }
     if (req.body["bestellung"]["type"]) {
         //check if someone uses the old format
-        res.append("message", "format deprecated")
-        res.sendStatus(301)
+        res.status(301)
+        res.send("format deprecated")
         return
     }
 
     checktoken(req.body["token"]).then(token_valid => {
         //if there is no delivery address we assume, we have an address saved already
         if (req.body[delivery_address_json]) {
-            //TODO Addresses are not nullable
-            let delivery_adress = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"], req.body[delivery_address_json]["ort"]);
-            let billing_adress = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
+            let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"], req.body[delivery_address_json]["ort"]);
+            let billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
 
             // Checks that each attribute has a value
-            if (delivery_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
-                billing_adress.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
+            if (delivery_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
+                billing_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
                 res.status(401).append("message", "Adresse nicht vollständig").send()
             } else {
-                waitForIds(delivery_adress, billing_adress).then(value => {
+                waitForIds(delivery_address, billing_address).then(value => {
                     res.status(200)
                     if (!token_valid) {
                         //we decided to save the orders even if the token is invalid
@@ -73,30 +67,26 @@ router.post("/order", async (req, res) => {
                     res.send(value)
                 })
             }
+        } else if (token_valid) {
+            con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]], (err, result) => {
+                let repairQueryElement = repairQuery(result)[0]
+                if (repairQueryElement) {
+                    let delivery_address = new Adresse(repairQueryElement["vorname"], repairQueryElement["nachname"], repairQueryElement["strasse"], repairQueryElement["hausnummer"], repairQueryElement["postleitzahl"], repairQueryElement["ort"]);
+                    waitForIds(delivery_address, delivery_address).then(value => {
+                        res.status(200)
+                        res.send(value)
+                    })
+                } else {
+                    res.status(401)
+                    res.send("no default address for user")
+                }
+            })
         } else {
-            if (token_valid) {
-                con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]], (err, result) => {
-                    let repairQueryElement = repairQuery(result)[0]
-                    if (repairQueryElement) {
-                        let delivery_adress = new Adresse(repairQueryElement["vorname"], repairQueryElement["nachname"], repairQueryElement["strasse"], repairQueryElement["hausnummer"], repairQueryElement["postleitzahl"], repairQueryElement["ort"]);
-                        waitForIds(delivery_adress, delivery_adress).then(value => {
-                            res.status(200)
-                            res.send(value)
-                        })
-                    } else {
-                        res.status(401)
-                        res.append("message", "no default address for user")
-                        res.send()
-                    }
-                })
-            } else {
-                //if the token is invalid we won't find a default address for the user
-                res.status(400)
-                res.append("message", "token invalid, cannot get address")
-                res.send()
-            }
-
+            //if the token is invalid we won't find a default address for the user
+            res.status(400)
+            res.send("token invalid, cannot get address")
         }
+
     })
 })
 
