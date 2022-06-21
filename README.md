@@ -72,7 +72,9 @@ Return:
 
 ### Get one Order
 
-GET: http://devel1:3000/api/order?order=1 \
+GET: http://devel1:3000/api/order \
+Query Params :
+* order : number
 Parameter:
 
 * order: int
@@ -95,7 +97,9 @@ Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
 
 ### Get orders from user
-GET: http://devel1:3000/api/orders?token= \
+GET: http://devel1:3000/api/orders \
+Query Params :
+* token : string[10]
 Get all orders nach user gefiltert 
 
 ## Get Products
@@ -108,7 +112,7 @@ GET: http://devel1:3000/api/products \
 * preis: int
 ## Standard Adresse 
 ### Get 
-GET: http://devel1:3000/api/user/address
+GET: http://devel1:3000/api/user/address \
 Query Params :
 * token : string[10]
 return : 
