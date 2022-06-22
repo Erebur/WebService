@@ -1,4 +1,4 @@
-const Adresse = class {
+const Address = class {
     get vorname() {
         return this._vorname;
     }
@@ -46,4 +46,4 @@ const Adresse = class {
     }
 
 }
-module.exports = Adresse
+module.exports = Address

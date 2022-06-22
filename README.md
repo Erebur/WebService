@@ -57,7 +57,8 @@ token ist hier nicht mehr optional
 
 ### Messages 
 Bei Fehlern wird ein header mit weiteren informationen angefügt 
-## Get Order Status
+## Orders 
+### Status
 
 GET: http://devel1:3000/api/order/status \
 Parameter:
@@ -69,9 +70,11 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## Get one Order
+### Get one Order
 
-GET: http://devel1:3000/api/order?order=1 \
+GET: http://devel1:3000/api/order \
+Query Params :
+* order : number
 Parameter:
 
 * order: int
@@ -88,18 +91,43 @@ Return:
 * status: String \
   z.B.: "offen"
 
-## ~~Get all Orders~~
+### ~~Get all Orders~~
 GET: http://devel1:3000/api/orders \
 Datenschutz deluxe \
 Liste mit allen vorhandenen Aufträgen wie oben
 
-## Get orders from user
-GET: http://devel1:3000/api/orders?token= \
+### Get orders from user
+GET: http://devel1:3000/api/orders \
+Query Params :
+* token : string[10]
 Get all orders nach user gefiltert 
 
-## Add address to user
-POST: http://devel1:3000/api/user/address
+## Get Products
+GET: http://devel1:3000/api/products \
+übergibt alle produkte
 
+* id: int
+* name: Char
+* beschreibung: String
+* preis: int
+## Standard Adresse 
+### Get 
+GET: http://devel1:3000/api/user/address \
+Query Params :
+* token : string[10]
+return : 
+``` json5 
+{
+  vorname: "",
+  nachname: "",
+  strasse: ,
+  hausnummer: ,
+  postleitzahl: ,
+  ort: "D"
+}
+```
+### Set
+POST: http://devel1:3000/api/user/address \
 Speichert eine Adresse zu dem eingegebenen User
 
 ```json5
@@ -113,16 +141,6 @@ Speichert eine Adresse zu dem eingegebenen User
   "token":""
 }
 ```
-
-## Get Products
-GET: http://devel1:3000/api/products \
-übergibt alle produkte
-
-* id: int
-* name: Char
-* beschreibung: String
-* preis: int
-
 ## Authentication
 ### Create User
 POST: http://devel1:3000/api/user/create \
