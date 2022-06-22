@@ -166,6 +166,7 @@ Body:
 {
   "username": "User",
   "password": "PW",
+  "new_password": "",
   "token_duration":120
 }
 ```
