@@ -7,8 +7,6 @@ const saltRounds = 10;
 
 
 router.post('/login', (req, res) => {
-
-
     con.query('SELECT API_TOKEN,UNIX_TIMESTAMP(expiration_date) ed,Password FROM `Users` WHERE Username = ?',
         [req.body["username"], req.body["password"]],
         (error, result) => {
@@ -16,6 +14,10 @@ router.post('/login', (req, res) => {
                 //test Password Hash
                 bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function (error, response) {
                     if (response) {
+                        if (req.body["new_password"]){
+                            con.query('Update password FROM `Users` set password = ? WHERE Username = ?',
+                                [bcrypt.hash(req.body["new_password"], saltRounds), req.body["username"]])
+                        }
                         let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
                         if (ed > Date.now()) {
                             token = repairQuery(result)[0]["API_TOKEN"]
