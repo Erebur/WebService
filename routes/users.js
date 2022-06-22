@@ -3,6 +3,7 @@ const router = express.Router();
 const con = require("../objects/DBconnection");
 const crypto = require("crypto")
 const bcrypt = require('bcrypt')
+const {hash} = require("bcrypt");
 const saltRounds = 10;
 
 
@@ -18,8 +19,10 @@ router.post('/login', (req, res) => {
                     if (response) {
                         // login accepted
                         if (req.body["new_password"]){
-                            con.query('Update password FROM `Users` set password = ? WHERE Username = ?',
-                                [bcrypt.hash(req.body["new_password"], saltRounds), req.body["username"]])
+                            bcrypt.hash(req.body["new_password"], saltRounds , (err, hash) =>{
+                                con.query('Update Users SET password = ? WHERE Username = ?',
+                                    [hash, req.body["username"]])
+                            })
                         }
                         let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
                         if (ed > Date.now()) {
