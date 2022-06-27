@@ -16,8 +16,8 @@ router.post('/login', (req, res) => {
                 bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function (error, response) {
                     if (response) {
                         // login accepted
-                        if (req.body["new_password"]){
-                            bcrypt.hash(req.body["new_password"], saltRounds , (err, hash) =>{
+                        if (req.body["new_password"]) {
+                            bcrypt.hash(req.body["new_password"], saltRounds, (err, hash) => {
                                 con.query('Update Users SET password = ? WHERE Username = ?',
                                     [hash, req.body["username"]])
                             })
@@ -26,13 +26,15 @@ router.post('/login', (req, res) => {
                         if (ed > Date.now()) {
                             token = repairQuery(result)[0]["API_TOKEN"]
                             res.status(200).json({"token": token}).send()
-                        // old token returned
+                            // old token returned
                         } else {
-                            token = crypto.randomUUID()
-                            token = token.replace(/-/g, '').substring(0, 10)
+                            do {
+                                token = crypto.randomUUID().replace(/-/g, '').substring(0, 10)
+                            } while (con.query('SELECT 1 FROM DUAL IF EXISTS(SELECT API_TOKEN FROM Users where API_TOKEN = ?)', [token]))
+
                             con.query('Update Users set API_TOKEN = ? ,expiration_date = date_add(current_timestamp, interval ? minute)  where Username = ?', [token, req.body["token_duration"] ? req.body["token_duration"] : 10, req.body["username"]])
                             res.status(200).json({"token": token, "status": "Token updated"}).send()
-                        // new token returned
+                            // new token returned
                         }
                     } else {
                         res.status(401).send()
