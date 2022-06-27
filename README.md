@@ -75,8 +75,8 @@ Return:
 GET: http://devel1:3000/api/order \
 Query Params :
 * order : number
-Parameter:
 
+Parameter:
 * order: int
 
 Return:
@@ -153,7 +153,8 @@ Body:
 }
 ```
 return:
-* token : String(10)
+* token : String(10) 
+
 Status:
 * 409: User existiert 
 

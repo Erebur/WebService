@@ -8,8 +8,6 @@ const saltRounds = 10;
 
 
 router.post('/login', (req, res) => {
-
-
     con.query('SELECT API_TOKEN,UNIX_TIMESTAMP(expiration_date) ed,Password FROM `Users` WHERE Username = ?',
         [req.body["username"], req.body["password"]],
         (error, result) => {
