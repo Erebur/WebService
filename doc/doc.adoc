@@ -1,0 +1,122 @@
+= Carlos Webservice
+:numbered:
+:doctype: book
+:source-highlighter: prettify
+:lang: de
+:data-uri:      // Bilder in der HTML-Datei
+:toc:
+:toclevels: 10
+:toc-title: Inhaltsverzeichnis
+:sectnums:
+:sectnumlevels: 10
+
+== Einleitung
+
+=== Motivation
+
+Für die Trainingsfirma der EDV-Schulen soll ein Programm erstellt werden, das Aufträge von Kunden speichert und sie an der Fertigungsstraße weitergibt
+
+=== Ziele
+
+Soll die Verbindung zwischen den Clients und Leitrechner erstellen, durch eine Datenbank
+
+=== Soll Zustand
+
+=== Funktionalität
+
+==== Use Case Diagram
+
+image::images/UseCase.png[UseCase]
+
+=== UseCase Beschreibung
+
+==== Kurzbeschreibung Auftragsverwaltung
+
+Dieser Anwendungsfall erlaubt es dem Nutzer Aufträge anzulegen und zu verwalten …
+
+==== Kb
+
+==== Standardverhalten
+
+Wenn ein Client einen Aufruf an ``Wenn Ein Client einen Aufruf an ``
+
+|===
+4+|Mögliche Aktionen
+
+|Auftrag Anlegen
+|Auftrag Status abfragen
+|Produkte abrufen
+|Login-system
+|===
+
+===== Produkte abrufen
+
+Eine einfache `Get` Anfrage auf ``/api/products`` gibt eine Liste aller relevanten Informationen aller Produkte zurück. +
+Ein Produkt hat folgende Attribute
+
+* id: int
+* name: Char
+* beschreibung: String
+* preis: int
+
+===== Login-system
+
+====== Nutzer Anlegen
+
+Eine `Post` Anfrage an  ``/api/user/create`` mit
+
+* username
+* password
+
+===== Auftrag anlegen
+
+====== Auftrag mit Token anlegen
+
+====== Auftrag mit Adresse anlegen
+
+===== Auftrag Status abfragen
+
+== Rahmenbedingungen
+
+=== Hardware
+
+==== Webserver
+
+***** Server muss npm 8.12.2 und dessen abhängigkeiten installiert haben
+***** andere abhängigkeiten können einfach durch `npm install` installiert werden
+
+==== Datenbank Server
+
+***** Für dieses Projekt nutzen wir die MariaDB (Version 10.5.15) die in eine Debian 5.10 VM gehostet wird.
+***** Die Stammdaten befinden sich in die Tabellen
+
+****** Adresse
+****** Adresse_User
+
+****** Auftrag
+
+****** Produkt
+
+****** Users
+
+=== Software
+
+==== Entwicklung
+
+Für den Javascript Teil haben wir hauptsächlich https://www.jetbrains.com/webstorm/[Webstorm] genutzt.
+
+Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und für die SQL-Funktionen https://www.jetbrains.com/datagrip/[Datagrip].
+
+==== Server
+
+Unser Programm läuft auf einen Schulinternen Server
+
+=== Klassendiagramm
+
+image::images/Klassendiagramm.png[Klassen Diagramm]
+
+=== Sauce - of stuff written
+
+==== LOREM IPSUM
+
+http://devel1/projekte/AlteProjekte/BFS2005Fi/tourenplanung/hkoenigs.pdf[no plagiat]
