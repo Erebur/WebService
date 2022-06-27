@@ -5,7 +5,7 @@
 :lang: de
 :data-uri:      // Bilder in der HTML-Datei
 :toc:
-:toclevels: 10
+:toclevels: 5
 :toc-title: Inhaltsverzeichnis
 :sectnums:
 :sectnumlevels: 10
@@ -20,7 +20,7 @@ Für die Trainingsfirma der EDV-Schulen soll ein Programm erstellt werden, das A
 
 Soll die Verbindung zwischen den Clients und Leitrechner erstellen, durch eine Datenbank
 
-=== Soll Zustand
+== Soll-Zustand
 
 === Funktionalität
 
@@ -63,12 +63,52 @@ Ein Produkt hat folgende Attribute
 
 ====== Nutzer Anlegen
 
-Eine `Post` Anfrage an  ``/api/user/create`` mit
+Eine `Post` Anfrage an  `/api/user/create` mit
 
 * username
 * password
 
+Dadurch wird in der Datenbank ein neuer Nutzer angelegt, solange er noch nicht schon existiert +
+zurückgegeben wird entsprechend ein token mit dem man sich authentifizieren kann
+
+====== Nutzer Anlegen
+
 ===== Auftrag anlegen
+
+Eine `Post` Anfrage an `/api/order/create` entweder
+
+* mit Adresse - Falls der User noch keine Adresse gespeichert hat
+
+** Liefer Adresse
+
+*** Vorname
+*** Nachname
+*** Strasse
+*** Haus Nummer
+*** Postleitzahl
+*** Ort
+
+** Rechnug Adresse
+
+*** ...
+
+** Bestellung
+
+*** Produkt
+*** Anzahl
+
+** Token
+
+oder
+
+* ohne Adresse - Falls der User eine Adresse gespeichert hat
+
+** Bestellung
+
+*** Produkt
+*** Anzahl
+
+** Token
 
 ====== Auftrag mit Token anlegen
 
@@ -76,32 +116,32 @@ Eine `Post` Anfrage an  ``/api/user/create`` mit
 
 ===== Auftrag Status abfragen
 
-== Rahmenbedingungen
+=== Rahmenbedingungen
 
-=== Hardware
+==== Hardware
 
-==== Webserver
+===== Webserver
 
-***** Server muss npm 8.12.2 und dessen abhängigkeiten installiert haben
-***** andere abhängigkeiten können einfach durch `npm install` installiert werden
+* Server muss npm 8.12.2 und dessen abhängigkeiten installiert haben
+* andere abhängigkeiten können einfach durch `npm install` installiert werden
 
-==== Datenbank Server
+===== Datenbank Server
 
-***** Für dieses Projekt nutzen wir die MariaDB (Version 10.5.15) die in eine Debian 5.10 VM gehostet wird.
-***** Die Stammdaten befinden sich in die Tabellen
+* Für dieses Projekt nutzen wir die MariaDB (Version 10.5.15) die in eine Debian 5.10 VM gehostet wird.
+* Die Stammdaten befinden sich in die Tabellen
 
-****** Adresse
-****** Adresse_User
+** Adresse
+** Adresse_User
 
-****** Auftrag
+** Auftrag
 
-****** Produkt
+** Produkt
 
-****** Users
+** Users
 
-=== Software
+==== Software
 
-==== Entwicklung
+===== Entwicklung
 
 Für den Javascript Teil haben wir hauptsächlich https://www.jetbrains.com/webstorm/[Webstorm] genutzt.
 
@@ -109,14 +149,15 @@ Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und fü
 
 ==== Server
 
-Unser Programm läuft auf einen Schulinternen Server
+Unser Programm läuft auf einen Nodeserver (Version 14+).
+Er stellt alle Routen zur Verfügung, im gesamten Schulnetz.
 
 === Klassendiagramm
 
 image::images/Klassendiagramm.png[Klassen Diagramm]
 
-=== Sauce - of stuff written
+== Sauce - of stuff written
 
-==== LOREM IPSUM
+=== LOREM IPSUM
 
 http://devel1/projekte/AlteProjekte/BFS2005Fi/tourenplanung/hkoenigs.pdf[no plagiat]
