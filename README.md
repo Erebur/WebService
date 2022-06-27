@@ -75,8 +75,8 @@ Return:
 GET: http://devel1:3000/api/order \
 Query Params :
 * order : number
-Parameter:
 
+Parameter:
 * order: int
 
 Return:
