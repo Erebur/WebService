@@ -50,7 +50,13 @@ router.post("/order", async (req, res) => {
         //if there is no delivery address we assume, we have an address saved already
         if (req.body[delivery_address_json]) {
             let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"], req.body[delivery_address_json]["ort"]);
-            let billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
+            let billing_address ;
+            if (req.body[billing_address_json]){
+                billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
+            }else {
+                billing_address = delivery_address
+            }
+
 
             // Checks that each attribute has a value
             if (delivery_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
