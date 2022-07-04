@@ -107,7 +107,7 @@ GET: http://devel1:3000/api/products \
 übergibt alle produkte
 
 * id: int
-* name: Char
+* name: String
 * beschreibung: String
 * preis: int
 ## Standard Adresse 
