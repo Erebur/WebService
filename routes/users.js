@@ -55,7 +55,7 @@ router.post('/create', function (req, res, next) {
             if (err)
                 res.sendStatus(409)
             else
-                res.send({token: Object.values(repairQuery(result)[0]).toString() !== "0" ? token : "invalid"})
+                res.send({token: Object.values(repairJson(result)[0]).toString() !== "0" ? token : "invalid"})
         })
     })
 });
