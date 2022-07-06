@@ -48,9 +48,13 @@ router.post("/order", async (req, res) => {
     checktoken(req.body["token"]).then(token_valid => {
         //if there is no delivery address we assume, we have an address saved already
         if (req.body[delivery_address_json]) {
-            let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"],  req.body[delivery_address_json]["hausnummer"] || req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"] || req.body[delivery_address_json]["postleitzahl"] , req.body[delivery_address_json]["ort"]);
-            let billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"] || req.body[billing_address_json]["hausnummer"], req.body[billing_address_json]["plz"]|| req.body[billing_address_json]["postleitzahl"], req.body[billing_address_json]["ort"]);
-
+            let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["hausnummer"] || req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"] || req.body[delivery_address_json]["postleitzahl"], req.body[delivery_address_json]["ort"]);
+            let billing_address;
+            if (!req.body[billing_address_json]) {
+                billing_address = delivery_address;
+            } else {
+                billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"] || req.body[billing_address_json]["hausnummer"], req.body[billing_address_json]["plz"] || req.body[billing_address_json]["postleitzahl"], req.body[billing_address_json]["ort"]);
+            }
             // Checks that each attribute has a value
             if (delivery_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 && billing_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
                 res.status(401).append("message", "Adresse nicht vollständig").send()

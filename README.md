@@ -17,21 +17,21 @@ Body:
     "vorname": "",
     "nachname": "",
     "strasse": "",
-    "nr": "1",
-    "plz": "12345",
+    "hausnummer": "1",
+    "postleitzahl": "12345",
     "ort": ""
   },
   "rechnungsAdresse": {
     "vorname": "",
     "nachname": "",
     "strasse": "",
-    "nr": "1",
-    "plz": "12345",
+    "hausnummer": "1",
+    "postleitzahl": "12345",
     "ort": ""
   },
   "bestellung": {
-      "A": 1,
-      "B": 5
+      "VRB": 1,
+      "VRBC": 5
   },
   "token":"??????????" ,
   "_token_comment": "token ist optional//bei falschen token 401"
@@ -46,8 +46,8 @@ Body:
 ```json5
 {
   "bestellung": {
-      "A": 1,
-      "B": 5
+      "VRB": 1,
+      "VRBC": 5
   },
   "token":"??????????" 
 }
@@ -121,7 +121,7 @@ return :
   vorname: "",
   nachname: "",
   strasse: ,
-  hausnummer: ,
+  : ,
   postleitzahl: ,
   ort: "D"
 }
@@ -136,7 +136,7 @@ Speichert eine Adresse zu dem eingegebenen User
   "nachname":"",
   "strasse":"",
   "hausnummer":"",
-  "plz":"",
+  "postleitzahl":"",
   "ort":"",
   "token":""
 }
