@@ -1,4 +1,5 @@
 = Carlos Webservice
+// TODO Deckblatt
 :numbered:
 :doctype: book
 :source-highlighter: prettify
@@ -9,16 +10,33 @@
 :toc-title: Inhaltsverzeichnis
 :sectnums:
 :sectnumlevels: 10
+:figure-caption: Abbildung
 
 == Einleitung
 
 === Motivation
 
-Für die Trainingsfirma der EDV-Schulen soll ein Programm erstellt werden, das Aufträge von Kunden speichert und sie an der Fertigungsstraße weitergibt
+Für die Trainingsfirma der EDV-Schulen soll ein Programm erstellt werden, das Aufträge von Kunden speichert und sie an die Fertigungsstraße weitergibt
+
+Es soll die Verbindung zwischen den Clients und Leitrechner ermöglichen, der Webservice bedient eine Datenbank in der Auftrags-/Produkt informationen gespeichert werden, welche dann von Leitrechner ausgelesen und bearbeitet werden.
 
 === Ziele
 
-Soll die Verbindung zwischen den Clients und Leitrechner erstellen, durch eine Datenbank
+Es soll eine Effiziente und umfangreiche Schnittstelle entstehen, um alle Anwendungsfälle zu decken, die einen einfachen umgang ermöglicht und es einem kunden möglichst einfach macht aufträge abzugeben.
+
+=== Allgemeines
+
+Die gesamte Bearbeitung des Projekts betrug 5 Monaten
+
+|===
+2+| Aufgaben verteilung
+
+| Server Logik | gemeinsam
+| DB Design | gemeinsam
+| SQL Abfragen | gemeinsam
+| Routen erstellen |  Simon Weber
+| SQL Funktionen |  Flavius Secheli
+|===
 
 == Soll-Zustand
 
@@ -26,32 +44,35 @@ Soll die Verbindung zwischen den Clients und Leitrechner erstellen, durch eine D
 
 ==== Use Case Diagram
 
+.Use Case Diagramm (wurde selbst erstellt mit https://app.diagrams.net/[Draw.io])
 image::images/UseCase.png[UseCase]
 
-=== UseCase Beschreibung
+==== Use Case Beschreibung
 
-==== Kurzbeschreibung Auftragsverwaltung
+===== Kurzbeschreibung Auftragsverwaltung
 
-Dieser Anwendungsfall erlaubt es dem Nutzer Aufträge anzulegen und zu verwalten …
+Diese Anwendungsfälle erlauben es dem Nutzer Aufträge anzulegen und dessen status über eine eindeutige ID abzufragen, die Daten werden dabei aus der Datenbank abgerufen
 
-==== Kb
+===== Kurzbeschreibung Login-System
 
-==== Standardverhalten
+Diese Anwendungsfälle erlauben es dem Nutzer sich ein Konto anzulegen und dieses zu verwalten.
+Durch Kontoerstellung oder Login wird ein eindeutiger Token erstellt, der bei jeder Abfrage geprüft wird.
 
-Wenn ein Client einen Aufruf an ``Wenn Ein Client einen Aufruf an ``
+===== Standardverhalten
+
+Es stehen folgende Arten von Aktionen für den Client zur verfügung
 
 |===
 4+|Mögliche Aktionen
 
-|Auftrag Anlegen
-|Auftrag Status abfragen
-|Produkte abrufen
-|Login-system
+|Auftrag Anlegen | Auftrag Status abfragen | Produkt informationen abrufen | Login-system
 |===
+
+In `POST` Requests wird als Content-Type Json verwendet und in `GET` Request dienen Query Parameter für mögliche variablen
 
 ===== Produkte abrufen
 
-Eine einfache `Get` Anfrage auf ``/api/products`` gibt eine Liste aller relevanten Informationen aller Produkte zurück. +
+Eine einfache `GET` Anfrage auf `/api/products` gibt eine Liste aller relevant Informationen aller Produkte zurück. +
 Ein Produkt hat folgende Attribute
 
 * id: int
@@ -59,7 +80,12 @@ Ein Produkt hat folgende Attribute
 * beschreibung: String
 * preis: int
 
-===== Login-system
+===== Authentifizierung
+
+====== Token
+
+Ein Token ist ein eindeutiger String.
+Er wird benutzt, um die wiederholte Passworteingabe bei jedem Aufruf zu verhindern und erlaubt dem Server, die Daten, wie hinterlegte Adressen, des Nutzers zu verwenden, und auch den nutzer als Sender zu hinterlegen.
 
 ====== Nutzer Anlegen
 
@@ -68,53 +94,104 @@ Eine `Post` Anfrage an  `/api/user/create` mit
 * username
 * password
 
-Dadurch wird in der Datenbank ein neuer Nutzer angelegt, solange er noch nicht schon existiert +
-zurückgegeben wird entsprechend ein token mit dem man sich authentifizieren kann
+Dadurch wird in der Datenbank ein neuer Nutzer angelegt, solange er noch nicht schon existiert. +
+Zurückgegeben wird entsprechend ein token mit dem man sich authentifizieren kann
 
-====== Nutzer Anlegen
+====== Login
+
+Eine `Post` anfrage an `/api/user/login/` hat zwei benötigte Parameter und zwei Optionale
+
+* username
+* password
+
+* token_duration : int
+* new_password
+
+token_duration: Hiermit kann man das Ablaufdatum des Auszustellenden Token verändern new_password: Hiermit wird Das Passwort Abgeändert
 
 ===== Auftrag anlegen
 
-Eine `Post` Anfrage an `/api/order/create` entweder
+Jede Bestellung hat
 
-* mit Adresse - Falls der User noch keine Adresse gespeichert hat
+* Liefer/Rechnungs-adresse
+* Ein Produkt
+* Anzahl
+* Auftragsteller
+* Eingangsdatum
+* Status
 
-** Liefer Adresse
+Es gibt zwei wege die Adressen der Bestellung zu übergeben.
 
-*** Vorname
-*** Nachname
-*** Strasse
-*** Haus Nummer
-*** Postleitzahl
-*** Ort
+* Die Adressen manuel übergeben +
+Es müssen zwei adressen (Lieferadresse und Rechnungsadresse) nach folgendem Muster angegeben werden. +
+Die Rechnungsadresse kann leer gelassen werden, sollte sie gleich der Lieferadresse sein.
+Falls das der Fall ist, wird sie kopiert.
+** Vorname
+** Nachname
+** Strasse
+** Haus Nummer
+** Postleitzahl
+** Ort
+* Einen Token mitsenden +
+Der Token muss gültig sein und der User muss eine Adresse gespeichert haben
 
-** Rechnug Adresse
+Des weiteren werden folgende Parameter benötigt
 
-*** ...
+* Bestellung
+** Produkt: Anzahl
+* Token
 
-** Bestellung
+Es können mehrere Produkt-/Anzahl paare vorkommen welche dann intern auf eigene Bestellungen aufgeteilt werden
 
-*** Produkt
-*** Anzahl
+Eine `Post` Anfrage an `/api/order/create` erstellt einen neuen Auftrag in der Datenbank
 
-** Token
+Nach dem Erfolgreichen Prüfen des Json Objekts wird diese Function aufgerufen
 
-oder
+[source,JS,options="nowrap"]
+----
+    let waitForIds = async function (delivery_address, billing_address) {
+        return new Promise((resolve, reject) => {
+            let ids = [];
+            let i = 0
+            for (const type in req.body["bestellung"]) {
+                con.query('select create_order(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [delivery_address.vorname, delivery_address.nachname, delivery_address.strasse, delivery_address.nr, delivery_address.plz, delivery_address.ort, billing_address.vorname, billing_address.nachname, billing_address.strasse, billing_address.nr, billing_address.plz, billing_address.ort, type, req.body["bestellung"][type], req.body["token"] ? req.body["token"] : "null"],
+                (err, result) => {
+                    if (err) {
+                        // ids.push(-1)
+                    } else {
+                        ids.push(Object.values(JSON.parse(JSON.stringify(result))[0]).toString())
+                    }
+                    if (i === Object.values(req.body["bestellung"]).length - 1) {
+                        resolve(ids)
+                    }
+                    i++;
+                })
+            }
+        })
+    }
+----
 
-* ohne Adresse - Falls der User eine Adresse gespeichert hat
+In diesem Codeauszug ist ``req.body["bestellung"]`` ein Array aus Produkt-/Anzahlpaaren.
+Für jedes dieser wird eine Datenbankabfrage abgesetzt.
+Sobald die letzte Abfrage beendet wurde, wird das Promise aufgelöst und das Array der IDs zurückgegeben.
 
-** Bestellung
+[source,js,options="nowrap"]
+----
+var res = require("express/lib/response");
 
-*** Produkt
-*** Anzahl
+    waitForIds(delivery_address, delivery_address).then(value => {
+        res.status(200)
+        res.send(value)
+    })
+----
 
-** Token
-
-====== Auftrag mit Token anlegen
-
-====== Auftrag mit Adresse anlegen
+In diesem Code Block wird `waitForIds` von Oben aufgerufen und sobald sie durchgelaufen ist, also wenn das Promise "resolved" wird, wird eine Antwort an den anfragenden gesendet, deren Status wird auf 200/OK gesetzt und es werden die IDs übergeben, die die aufgerufene methode zurückgibt.
 
 ===== Auftrag Status abfragen
+
+Eine `GET` Anfrage an `/api/order/status/` mit `order` (Auftragsid : `int`) als `Queryparameter`.
+
+Diese Anfrage liefert ein String mit dem Status zurück.
 
 === Rahmenbedingungen
 
@@ -127,37 +204,75 @@ oder
 
 ===== Datenbank Server
 
-* Für dieses Projekt nutzen wir die MariaDB (Version 10.5.15) die in eine Debian 5.10 VM gehostet wird.
+* Für dieses Projekt wird die MariaDB (Version 10.5.15) genutzt, die in einer Debian 5.10 VM gehostet wird.
 * Die Stammdaten befinden sich in die Tabellen
 
 ** Adresse
 ** Adresse_User
-
 ** Auftrag
-
 ** Produkt
-
 ** Users
 
 ==== Software
 
 ===== Entwicklung
 
-Für den Javascript Teil haben wir hauptsächlich https://www.jetbrains.com/webstorm/[Webstorm] genutzt.
+Das Programm wurde in Windows (10 und 11) geschrieben.
+
+Für den Javascript Teil hat man hauptsächlich https://www.jetbrains.com/webstorm/[Webstorm] genutzt.
 
 Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und für die SQL-Funktionen https://www.jetbrains.com/datagrip/[Datagrip].
 
 ==== Server
 
-Unser Programm läuft auf einen Nodeserver (Version 14+).
+Das Programm läuft auf einen Node-server (Version 14+).
 Er stellt alle Routen zur Verfügung, im gesamten Schulnetz.
 
 === Klassendiagramm
 
+.Klassendiagramm (wurde selbst erstellt mit Datagrip)
 image::images/Klassendiagramm.png[Klassen Diagramm]
 
-== Sauce - of stuff written
+=== Probleme im Projekt und Lösungsansätze
 
-=== LOREM IPSUM
+==== Javascript
 
-http://devel1/projekte/AlteProjekte/BFS2005Fi/tourenplanung/hkoenigs.pdf[no plagiat]
+Da Javascript nur auf einem Thread läuft und deshalb in der Sprache asynchrones Ausführen stark verbreitet ist, hatte man öfters Probleme mit Funktionen.
+Erwartet war, dass sie einen Wert liefern, dabei war der return Wert aber `undefined`.
+Gelöst hat man das Problem, mithilfe von `Promises` und `Callbacks`.
+
+Ein weiteres Problem war, dass bei der Konvertierung der Datenbankabfragen zu JSON Objekte, vor jedem Objekt
+`RowDataPacket` eingefügt wurde.
+Gelöst hat man das mit der Funktion `repairJson(json){...}`.
+
+[source,js]
+----
+function repairJson(json){
+    return JSON.parse(JSON.stringify(json));
+}
+----
+
+Diese formattiert den eingegebenen String zu ein Json Objekt und dann wieder zu String.
+
+==== MySQL
+
+Mit der Datenbank gab es auch ein Problem. phpMyAdmin war am Anfang nicht erreichbar und hat Fehler geworfen als man die Seite im Browser aufgerufen hat.
+Nach einem Update mit `apt update phpMyAdmin` war der Fehler weg.
+
+== Glossar
+
+|===
+|Fachwort |Erklärung
+
+|Promise
+|Versprechen immer einen Rückgabewert zurückzugeben
+
+|Callback
+|Eine Funktion die einer anderen Funktion übergeben wird und aufgerufen wird, wenn die Hauptfunktion es als richtig sieht, meist nachdem sie beendet wurde.
+|===
+
+== Quellen
+
+* https://nodejs.org/en/[node]
+* https://www.npmjs.com/[npm]
+* http://expressjs.com/[Express]

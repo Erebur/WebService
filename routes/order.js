@@ -24,7 +24,6 @@ router.post("/order", async (req, res) => {
                     }
                     i++;
                 })
-
             }
         })
     }
@@ -49,18 +48,11 @@ router.post("/order", async (req, res) => {
     checktoken(req.body["token"]).then(token_valid => {
         //if there is no delivery address we assume, we have an address saved already
         if (req.body[delivery_address_json]) {
-            let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"], req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"], req.body[delivery_address_json]["ort"]);
-            let billing_address ;
-            if (req.body[billing_address_json]){
-                billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"], req.body[billing_address_json]["plz"], req.body[billing_address_json]["ort"]);
-            }else {
-                billing_address = delivery_address
-            }
-
+            let delivery_address = new Adresse(req.body[delivery_address_json]["vorname"], req.body[delivery_address_json]["nachname"], req.body[delivery_address_json]["strasse"],  req.body[delivery_address_json]["hausnummer"] || req.body[delivery_address_json]["nr"], req.body[delivery_address_json]["plz"] || req.body[delivery_address_json]["postleitzahl"] , req.body[delivery_address_json]["ort"]);
+            let billing_address = new Adresse(req.body[billing_address_json]["vorname"], req.body[billing_address_json]["nachname"], req.body[billing_address_json]["strasse"], req.body[billing_address_json]["nr"] || req.body[billing_address_json]["hausnummer"], req.body[billing_address_json]["plz"]|| req.body[billing_address_json]["postleitzahl"], req.body[billing_address_json]["ort"]);
 
             // Checks that each attribute has a value
-            if (delivery_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 &&
-                billing_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
+            if (delivery_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6 && billing_address.atribsAsArray().filter(e => e.toString().length !== 0).length !== 6) {
                 res.status(401).append("message", "Adresse nicht vollständig").send()
             } else {
                 waitForIds(delivery_address, billing_address).then(value => {
@@ -75,7 +67,7 @@ router.post("/order", async (req, res) => {
             }
         } else if (token_valid) {
             con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.body["token"]], (err, result) => {
-                let repairQueryElement = repairQuery(result)[0]
+                let repairQueryElement = repairJson(result)[0]
                 if (repairQueryElement) {
                     let delivery_address = new Adresse(repairQueryElement["vorname"], repairQueryElement["nachname"], repairQueryElement["strasse"], repairQueryElement["hausnummer"], repairQueryElement["postleitzahl"], repairQueryElement["ort"]);
                     waitForIds(delivery_address, delivery_address).then(value => {
@@ -92,7 +84,6 @@ router.post("/order", async (req, res) => {
             res.status(400)
             res.send("token invalid, cannot get address")
         }
-
     })
 })
 
@@ -100,11 +91,11 @@ router.get("/orders", (req, res) => {
     checktoken(req.query["token"]).then(r => {
         if (r) {
             con.query('select * from Auftrag where user_id = (select u.id from Users u WHERE u.API_TOKEN = ?)', [req.query["token"]], (err, result) => {
-                res.send(repairQuery(result))
+                res.send(repairJson(result))
             })
         } else {
             con.query('select * from Auftrag', (err, result) => {
-                res.send(repairQuery(result))
+                res.send(repairJson(result))
             })
         }
     })
@@ -112,19 +103,19 @@ router.get("/orders", (req, res) => {
 
 router.get("/order", (req, res) => {
     con.query('select * from Auftrag Where id = ?', [req.query["order"]], (err, result) => {
-        res.send(repairQuery(result))
+        res.send(repairJson(result))
     })
 });
 
 router.get("/order/status", (req, res) => {
     con.query('select status from Auftrag Where id = ?', [req.query["order"]], (err, result) => {
-        res.send(repairQuery(result))
+        res.send(repairJson(result))
     })
 });
 
 router.get("/products", (req, res) => {
     con.query('select * from Produkt', (err, result) => {
-        res.send(repairQuery(result))
+        res.send(repairJson(result))
     })
 });
 

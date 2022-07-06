@@ -11,9 +11,9 @@ router.post('/login', (req, res) => {
     con.query('SELECT API_TOKEN,UNIX_TIMESTAMP(expiration_date) ed,Password FROM `Users` WHERE Username = ?',
         [req.body["username"], req.body["password"]],
         (error, result) => {
-            if (repairQuery(result)[0]) {
+            if (repairJson(result)[0]) {
                 //test Password Hash
-                bcrypt.compare(req.body["password"], repairQuery(result)[0]["Password"], function (error, response) {
+                bcrypt.compare(req.body["password"], repairJson(result)[0]["Password"], function (error, response) {
                     if (response) {
                         // login accepted
                         if (req.body["new_password"]) {
@@ -22,9 +22,9 @@ router.post('/login', (req, res) => {
                                     [hash, req.body["username"]])
                             })
                         }
-                        let ed = new Date(repairQuery(result)[0]["ed"] * 1000), token;
+                        let ed = new Date(repairJson(result)[0]["ed"] * 1000), token;
                         if (ed > Date.now()) {
-                            token = repairQuery(result)[0]["API_TOKEN"]
+                            token = repairJson(result)[0]["API_TOKEN"]
                             res.status(200).json({"token": token}).send()
                             // old token returned
                         } else {
@@ -66,7 +66,7 @@ router.get('/address', (req, res) => {
             con.query("SELECT a.vorname, a.nachname ,a.strasse, a.hausnummer  ,a.postleitzahl ,a.ort from Adresse_User au inner join Adresse a on au.Adresse_id=a.id inner join Users u on u.id = au.User_id where u.API_TOKEN = ?", [req.query["token"]],
                 (err, result) => {
                     res.status(200)
-                    res.send(repairQuery(result)[0])
+                    res.send(repairJson(result)[0])
                 })
         } else {
             res.sendStatus(401)
@@ -75,14 +75,13 @@ router.get('/address', (req, res) => {
 })
 
 router.post('/address', (req, res) => {
-    con.query("Select add_address_to_user(?,?,?,?,?,?,?)", [req.body["vorname"], req.body["nachname"], req.body["strasse"], req.body["hausnummer"], req.body["plz"], req.body["ort"], req.body["token"]],
+    con.query("Select add_address_to_user(?,?,?,?,?,?,?)", [req.body["vorname"], req.body["nachname"], req.body["strasse"], req.body["hausnummer"] || req.body["nr"], req.body["plz"] || req.body["postleitzahl"], req.body["ort"], req.body["token"]],
         (err, result) => {
             if (err) {
-                res.append("err", err)
                 res.sendStatus(400)
                 return
             }
-            if (Object.values(repairQuery(result)[0]).toString() === "1") {
+            if (Object.values(repairJson(result)[0]).toString() === "1") {
                 res.sendStatus(200)
             } else res.status(401).send("Token not found")
         })
