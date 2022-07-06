@@ -60,13 +60,20 @@ router.post("/order", async (req, res) => {
                 res.status(401).append("message", "Adresse nicht vollständig").send()
             } else {
                 waitForIds(delivery_address, billing_address).then(value => {
-                    res.status(200)
-                    if (!token_valid) {
-                        //we decided to save the orders even if the token is invalid
-                        res.status(401)
-                        res.append("message", "token invalid")
+                    if (value.length === Object.keys(req.body["bestellung"]).length){
+                        res.status(200)
+                        if (!token_valid) {
+                            //we decided to save the orders even if the token is invalid
+                            res.status(401)
+                            res.append("message", "token invalid")
+                        }
+                        res.send(value)
+                    }else {
+                        res.status(206)
+                        res.append("message", "One or more product Ids not found")
+                        if (value) res.send(value)
+                        else res.send(-1)
                     }
-                    res.send(value)
                 })
             }
         } else if (token_valid) {
