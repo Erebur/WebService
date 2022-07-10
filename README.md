@@ -118,12 +118,12 @@ Query Params :
 return : 
 ``` json5 
 {
-  vorname: "",
-  nachname: "",
-  strasse: ,
-  : ,
-  postleitzahl: ,
-  ort: "D"
+  "vorname":"",
+  "nachname":"",
+  "strasse":"",
+  "hausnummer":"",
+  "postleitzahl":"",
+  "ort":"",
 }
 ```
 ### Set
