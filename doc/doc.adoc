@@ -193,6 +193,19 @@ Eine `GET` Anfrage an `/api/order/status/` mit `order` (Auftragsid : `int`) als 
 
 Diese Anfrage liefert ein String mit dem Status zurück.
 
+=== Fehlerbehandlung
+
+Sollte eine Anfrage ohne Probleme durchgelaufen sein wird ein Statuscode 200-OK zurückgegeben
+
+
+=== Tests
+
+Da die Zeit sehr knapp war, gab es keine Möglichkeit Unittests zu schreiben.
+Eine weitere Methode war, alle anderen Gruppenmitglieder auf unserem Live-server 
+Nach jedem neuen Feature wurde mithilfe von https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo[ARC-Client] getestet. Man hat versucht, sich jegliche Nutzer Aktionen auszudenken und zu prüfen alles Fehlerfrei (außer die von uns geworfene Fehlern) laufen zu lassen.
+
+
+
 === Rahmenbedingungen
 
 ==== Server
