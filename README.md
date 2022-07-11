@@ -94,7 +94,7 @@ Liste mit allen vorhandenen Aufträgen wie oben
 
 ### Get orders from user
 GET: http://devel1:3000/api/orders \
-Query Params :
+Query Parameter :
 * token : string[10]
 Get all orders nach user gefiltert 
 
