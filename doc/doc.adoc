@@ -218,7 +218,7 @@ Auf dem Server wird die App mit https://pm2.keymetrics.io/[pm2] verwaltet, durch
 ===== Datenbank
 
 * Für dieses Projekt wird die MariaDB (Version 10.5.15) genutzt
-* Die Stammdaten befinden sich in die Tabellen
+* Die Stammdaten befinden sich in den Tabellen
 
 ** Adresse
 ** Adresse_User
