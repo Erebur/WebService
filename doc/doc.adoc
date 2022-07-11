@@ -78,7 +78,7 @@ Ein Produkt hat folgende Attribute
 * id: int
 * name: Char
 * beschreibung: String
-* preis: int
+* preis: number
 
 ===== Authentifizierung
 
@@ -132,7 +132,7 @@ Falls das der Fall ist, wird sie kopiert.
 ** Haus Nummer
 ** Postleitzahl
 ** Ort
-* Einen Token mitsenden +
+* gespeicherte Adressen des users via Token verwenden +
 Der Token muss gültig sein und der User muss eine Adresse gespeichert haben
 
 Des weiteren werden folgende Parameter benötigt
@@ -197,14 +197,11 @@ Diese Anfrage liefert ein String mit dem Status zurück.
 
 Sollte eine Anfrage ohne Probleme durchgelaufen sein wird ein Statuscode 200-OK zurückgegeben
 
-
 === Tests
 
 Da die Zeit sehr knapp war, gab es keine Möglichkeit Unittests zu schreiben.
-Eine weitere Methode war, alle anderen Gruppenmitglieder auf unserem Live-server 
+Eine weitere Methode war, alle anderen Gruppenmitglieder auf unserem Live-server
 Nach jedem neuen Feature wurde mithilfe von https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo[ARC-Client] getestet. Man hat versucht, sich jegliche Nutzer Aktionen auszudenken und zu prüfen alles Fehlerfrei (außer die von uns geworfene Fehlern) laufen zu lassen.
-
-
 
 === Rahmenbedingungen
 
@@ -255,7 +252,7 @@ Startet node bei dateiänderung neu um bei der Entwicklung zu helfen
 ** morgan
 ** pug
 * cors +
-Es mussten cors aktiviert werden um
+Es musste cors aktiviert werden, da die Website probleme hatte auf die API zuzugreifen
 
 === Probleme im Projekt und Lösungsansätze
 
@@ -276,7 +273,7 @@ function repairJson(json){
 }
 ----
 
-Diese formattiert den eingegebenen String zu ein Json Objekt und dann wieder zu String.
+Diese formatiert den eingegebenen String zu ein Json Objekt und dann wieder zu String.
 
 ==== MySQL
 
