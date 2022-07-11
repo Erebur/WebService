@@ -241,7 +241,6 @@ Für den Javascript Teil hat man hauptsächlich https://www.jetbrains.com/websto
 Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und für die SQL-Funktionen https://www.jetbrains.com/datagrip/[Datagrip].
 
 ==== Abhängigkeiten
-Hier alle Abhängigkeiten der node application aufgelistet und falls nötig beschrieben
 
 * node
 * nodemon +
