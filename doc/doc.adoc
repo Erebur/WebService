@@ -200,7 +200,9 @@ Sollte eine Anfrage ohne Probleme durchgelaufen sein wird ein Statuscode 200-OK 
 === Tests
 
 Da die Zeit sehr knapp war, gab es keine Möglichkeit Unittests zu schreiben.
+
 Eine weitere Methode war, alle anderen Gruppenmitglieder auf unserem Live-server arbeiten zu lassen, und alle ihre Probleme zu lösen.
+
 Nach jedem neuen Feature wurde mithilfe von https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo[ARC-Client] getestet. Man hat versucht, sich jegliche Nutzer Aktionen auszudenken und zu prüfen, ob alles Fehlerfrei (außer die von uns geworfene Fehlern) läuft.
 
 === Rahmenbedingungen
