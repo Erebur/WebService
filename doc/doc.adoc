@@ -195,16 +195,19 @@ Diese Anfrage liefert ein String mit dem Status zurück.
 
 === Rahmenbedingungen
 
-==== Hardware
+==== Server
 
-===== Webserver
+Die Datenbank und der Webservice werden beide von einem virtuellen Debian 5.10 server zur Verfügung gestellt
 
-* Server muss npm 8.12.2 und dessen abhängigkeiten installiert haben
-* andere abhängigkeiten können einfach durch `npm install` installiert werden
+===== Webservice
 
-===== Datenbank Server
+Der Webservice ist eine node Anwendung auf basis des Express-Frameworks.
+Zum Entwickeln wurde er mit https://nodemon.io/[nodemon] gestartet.
+Auf dem Server wird die App mit https://pm2.keymetrics.io/[pm2] verwaltet, durch welches eventuelle Skalierung bei Bedarf möglich wäre. +
 
-* Für dieses Projekt wird die MariaDB (Version 10.5.15) genutzt, die in einer Debian 5.10 VM gehostet wird.
+===== Datenbank
+
+* Für dieses Projekt wird die MariaDB (Version 10.5.15) genutzt
 * Die Stammdaten befinden sich in die Tabellen
 
 ** Adresse
@@ -213,35 +216,43 @@ Diese Anfrage liefert ein String mit dem Status zurück.
 ** Produkt
 ** Users
 
-==== Software
+.Klassendiagramm (wurde selbst erstellt mit Datagrip)
+image::images/Klassendiagramm.png[Klassen Diagramm]
 
-===== Entwicklung
+==== Entwicklung
+Das Programm wurde in Windows (10 und 11) geschrieben, wobei alle verwendeten IDEs plattformunabhängig sind.
 
-Das Programm wurde in Windows (10 und 11) geschrieben.
+Als Sprachen wurden Javascript und SQL verwendet
 
 Für den Javascript Teil hat man hauptsächlich https://www.jetbrains.com/webstorm/[Webstorm] genutzt.
 
 Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und für die SQL-Funktionen https://www.jetbrains.com/datagrip/[Datagrip].
 
-==== Server
+==== Abhängigkeiten
+Hier alle Abhängigkeiten der node application aufgelistet und falls nötig beschrieben
 
-Das Programm läuft auf einen Node-server (Version 14+).
-Er stellt alle Routen zur Verfügung, im gesamten Schulnetz.
-
-=== Klassendiagramm
-
-.Klassendiagramm (wurde selbst erstellt mit Datagrip)
-image::images/Klassendiagramm.png[Klassen Diagramm]
+* node
+* nodemon +
+Startet node bei dateiänderung neu um bei der Entwicklung zu helfen
+* pm2
+* express
+** cookie-parser
+** debug
+** http-errors
+** morgan
+** pug
+* cors +
+Es mussten cors aktiviert werden um
 
 === Probleme im Projekt und Lösungsansätze
 
 ==== Javascript
 
 Da Javascript nur auf einem Thread läuft und deshalb in der Sprache asynchrones Ausführen stark verbreitet ist, hatte man öfters Probleme mit Funktionen.
-Erwartet war, dass sie einen Wert liefern, dabei war der return Wert aber `undefined`.
-Gelöst hat man das Problem, mithilfe von `Promises` und `Callbacks`.
+Erwartet war, dass sie einen Wert liefern, dabei war der return Wert aber noch `undefined`.
+Gelöst hat man das Problem nach ausgiebiger Recherche mithilfe von `Promises` und `Callbacks`.
 
-Ein weiteres Problem war, dass bei der Konvertierung der Datenbankabfragen zu JSON Objekte, vor jedem Objekt
+Ein weiteres Problem war, dass bei der Konvertierung der Datenbankabfragen zu JSON Objekten, vor jedem Objekt
 `RowDataPacket` eingefügt wurde.
 Gelöst hat man das mit der Funktion `repairJson(json){...}`.
 
@@ -260,7 +271,6 @@ Mit der Datenbank gab es auch ein Problem. phpMyAdmin war am Anfang nicht erreic
 Nach einem Update mit `apt update phpMyAdmin` war der Fehler weg.
 
 == Glossar
-
 |===
 |Fachwort |Erklärung
 
