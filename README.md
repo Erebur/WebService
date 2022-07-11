@@ -61,8 +61,7 @@ Bei Fehlern wird ein header mit weiteren informationen angefügt
 ### Status
 
 GET: http://devel1:3000/api/order/status \
-Parameter:
-
+Query Parameter:
 * order: int
 
 Return:
@@ -73,10 +72,7 @@ Return:
 ### Get one Order
 
 GET: http://devel1:3000/api/order \
-Query Params :
-* order : number
-
-Parameter:
+Query Parameter:
 * order: int
 
 Return:
@@ -109,11 +105,11 @@ GET: http://devel1:3000/api/products \
 * id: int
 * name: String
 * beschreibung: String
-* preis: int
+* preis: number
 ## Standard Adresse 
 ### Get 
 GET: http://devel1:3000/api/user/address \
-Query Params :
+Query Parameter :
 * token : string[10]
 return : 
 ``` json5 
@@ -153,7 +149,7 @@ Body:
 }
 ```
 return:
-* token : String(10) 
+* token : string[10] 
 
 Status:
 * 409: User existiert 
@@ -172,5 +168,5 @@ Body:
 }
 ```
 return
-* token: String(10)
+* token: string[10]
 * status: "Token updated" / ""
