@@ -29,7 +29,7 @@ router.post('/login', (req, res) => {
                             // old token returned
                         } else {
                             // do {
-                            //     token = crypto.randomUUID().replace(/-/g, '').substring(0, 10)
+                                token = crypto.randomUUID().replace(/-/g, '').substring(0, 10)
                             // } while (con.query('SELECT 1 FROM DUAL IF EXISTS(SELECT API_TOKEN FROM Users where API_TOKEN = ?)', [token]))
 
                             con.query('Update Users set API_TOKEN = ? ,expiration_date = date_add(current_timestamp, interval ? minute)  where Username = ?', [token, req.body["token_duration"] ? req.body["token_duration"] : 10, req.body["username"]])
