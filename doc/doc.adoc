@@ -295,7 +295,7 @@ function repairJson(json){
 }
 ----
 
-Diese formatiert den eingegeben JSON Objekt zum String und dann wieder zu JSON Objekt.
+Diese formatiert das eingegebe JSON Objekt zu einem String und anschließend zu einem JSON Objekt.
 
 ==== MySQL
 
