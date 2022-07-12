@@ -18,18 +18,18 @@
 
 Für die Trainingsfirma der EDV-Schulen soll ein Programm erstellt werden, das Aufträge von Kunden speichert und sie an die Fertigungsstraße weitergibt
 
-Es soll die Verbindung zwischen den Clients und Leitrechner ermöglichen, der Webservice bedient eine Datenbank in der Auftrags-/Produkt informationen gespeichert werden, welche dann von Leitrechner ausgelesen und bearbeitet werden.
+Es soll die Verbindung zwischen den Clients und Leitrechner ermöglichen, der Webservice bedient eine Datenbank in der Auftrags-/Produkt informationen gespeichert werden, welche dann von Leitrechnern ausgelesen und bearbeitet werden.
 
 === Ziele
 
-Es soll eine Effiziente und umfangreiche Schnittstelle entstehen, um alle Anwendungsfälle zu decken, die einen einfachen umgang ermöglicht und es einem kunden möglichst einfach macht aufträge abzugeben.
+Es soll eine Effiziente und umfangreiche Schnittstelle entstehen, um alle Anwendungsfälle zu decken, die einen einfachen Umgang ermöglicht und es einem Kunden möglichst einfach macht Aufträge abzugeben.
 
 === Allgemeines
 
-Die gesamte Bearbeitung des Projekts betrug 5 Monaten
+Die gesamte Bearbeitung des Projekts betrug 5 Monate
 
 |===
-2+| Aufgaben verteilung
+2+| Aufgabenverteilung
 
 | Server Logik | gemeinsam
 | DB Design | gemeinsam
@@ -51,7 +51,7 @@ image::images/UseCase.png[UseCase]
 
 ===== Kurzbeschreibung Auftragsverwaltung
 
-Diese Anwendungsfälle erlauben es dem Nutzer Aufträge anzulegen und dessen status über eine eindeutige ID abzufragen, die Daten werden dabei aus der Datenbank abgerufen
+Diese Anwendungsfälle erlauben es dem Nutzer Aufträge anzulegen und dessen Status über eine eindeutige ID abzufragen, die Daten werden dabei aus der Datenbank abgerufen
 
 ===== Kurzbeschreibung Login-System
 
@@ -60,19 +60,19 @@ Durch Kontoerstellung oder Login wird ein eindeutiger Token erstellt, der bei je
 
 ===== Standardverhalten
 
-Es stehen folgende Arten von Aktionen für den Client zur verfügung
+Es stehen folgende Arten von Aktionen für den Client zur Verfügung
 
 |===
 4+|Mögliche Aktionen
 
-|Auftrag Anlegen | Auftrag Status abfragen | Produkt informationen abrufen | Login-system
+|Auftrag Anlegen | Auftrag Status abfragen | Produkt Informationen abrufen | Login-system
 |===
 
-In `POST` Requests wird als Content-Type Json verwendet und in `GET` Request dienen Query Parameter für mögliche variablen
+In `POST` Requests wird als Content-Type JSON verwendet und in `GET` Request dienen Queryparameter für mögliche Variablen
 
 ===== Produkte abrufen
 
-Eine einfache `GET` Anfrage auf `/api/products` gibt eine Liste aller relevant Informationen aller Produkte zurück. +
+Eine einfache `GET` Anfrage auf `/api/products` gibt eine Liste aller relevanten Informationen aller Produkte zurück. +
 Ein Produkt hat folgende Attribute
 
 * id: int
@@ -85,7 +85,7 @@ Ein Produkt hat folgende Attribute
 ====== Token
 
 Ein Token ist ein eindeutiger String.
-Er wird benutzt, um die wiederholte Passworteingabe bei jedem Aufruf zu verhindern und erlaubt dem Server, die Daten, wie hinterlegte Adressen, des Nutzers zu verwenden, und auch den nutzer als Sender zu hinterlegen.
+Er wird benutzt, um die wiederholte Passworteingabe bei jedem Aufruf zu verhindern und erlaubt dem Server, die Daten, wie hinterlegte Adressen des Nutzers zu verwenden und auch den Nutzer als Sender zu hinterlegen.
 
 ====== Nutzer Anlegen
 
@@ -95,11 +95,11 @@ Eine `Post` Anfrage an  `/api/user/create` mit
 * password
 
 Dadurch wird in der Datenbank ein neuer Nutzer angelegt, solange er noch nicht schon existiert. +
-Zurückgegeben wird entsprechend ein token mit dem man sich authentifizieren kann
+Zurückgegeben wird entsprechend ein Token mit dem man sich authentifizieren kann
 
 ====== Login
 
-Eine `Post` anfrage an `/api/user/login/` hat zwei benötigte Parameter und zwei Optionale
+Eine `Post` Anfrage an `/api/user/login/` hat zwei benötigte Parameter und zwei Optionale
 
 * username
 * password
@@ -107,7 +107,8 @@ Eine `Post` anfrage an `/api/user/login/` hat zwei benötigte Parameter und zwei
 * token_duration : int
 * new_password
 
-token_duration: Hiermit kann man das Ablaufdatum des Auszustellenden Token verändern new_password: Hiermit wird Das Passwort Abgeändert
+token_duration: Hiermit kann man das Ablaufdatum des Auszustellenden Token verändern +
+new_password: Hiermit wird das Passwort abgeändert
 
 ===== Auftrag anlegen
 
@@ -120,10 +121,10 @@ Jede Bestellung hat
 * Eingangsdatum
 * Status
 
-Es gibt zwei wege die Adressen der Bestellung zu übergeben.
+Es gibt zwei Wege die Adressen der Bestellung zu übergeben.
 
 * Die Adressen manuel übergeben +
-Es müssen zwei adressen (Lieferadresse und Rechnungsadresse) nach folgendem Muster angegeben werden. +
+Es müssen zwei Adressen (Lieferadresse und Rechnungsadresse) nach folgendem Muster angegeben werden. +
 Die Rechnungsadresse kann leer gelassen werden, sollte sie gleich der Lieferadresse sein.
 Falls das der Fall ist, wird sie kopiert.
 ** Vorname
@@ -141,11 +142,11 @@ Des weiteren werden folgende Parameter benötigt
 ** Produkt: Anzahl
 * Token
 
-Es können mehrere Produkt-/Anzahl paare vorkommen welche dann intern auf eigene Bestellungen aufgeteilt werden
+Es können mehrere Produkt-/Anzahlpaare vorkommen welche dann intern auf eigene Bestellungen aufgeteilt werden
 
 Eine `Post` Anfrage an `/api/order/create` erstellt einen neuen Auftrag in der Datenbank
 
-Nach dem Erfolgreichen Prüfen des Json Objekts wird diese Function aufgerufen
+Nach dem Erfolgreichen Prüfen des JSON Objekts wird diese Funktion aufgerufen
 
 [source,JS,options="nowrap"]
 ----
@@ -185,7 +186,7 @@ var res = require("express/lib/response");
     })
 ----
 
-In diesem Code Block wird `waitForIds` von Oben aufgerufen und sobald sie durchgelaufen ist, also wenn das Promise "resolved" wird, wird eine Antwort an den anfragenden gesendet, deren Status wird auf 200/OK gesetzt und es werden die IDs übergeben, die die aufgerufene methode zurückgibt.
+In diesem Codeblock wird `waitForIds` von Oben aufgerufen und sobald sie durchgelaufen ist, also wenn das Promise "resolved" wird, wird eine Antwort an den Anfragenden gesendet, deren Status wird auf 200/OK gesetzt und es werden die IDs übergeben, die die aufgerufene Methode zurückgibt.
 
 ===== Auftrag Status abfragen
 
@@ -204,13 +205,13 @@ Da die Zeit sehr knapp war, gab es keine Möglichkeit Unittests zu schreiben.
 Eine weitere Methode war, alle anderen Gruppenmitglieder auf unserem Live-server arbeiten zu lassen, und alle ihre Probleme zu lösen.
 
 Nach jedem neuen Feature wurde mithilfe von https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo[ARC-Client] getestet.
-Man hat versucht, sich jegliche Nutzer Aktionen auszudenken und zu prüfen, ob alles Fehlerfrei (außer die von uns geworfene Fehlern) läuft.
+Man hat versucht, sich jegliche Nutzer Aktionen auszudenken und zu prüfen, ob alles fehlerfrei (außer die von uns geworfene Fehlern) läuft.
 
 === Rahmenbedingungen
 
 ==== Server
 
-Die Datenbank und der Webservice werden beide von einem virtuellen Debian 5.10 server zur Verfügung gestellt
+Die Datenbank und der Webservice werden beide von einem virtuellen Debian 5.10 Server zur Verfügung gestellt
 
 ===== Webservice
 
@@ -260,11 +261,11 @@ Für das Erstellen der Tabellen, https://www.phpmyadmin.net/[phpMyAdmin] und fü
 
 ==== Abhängigkeiten
 
-Die Abhängigkeiten der Node applikation sind:
+Die Abhängigkeiten der Node Applikation sind:
 
 * node
 * nodemon +
-Startet node bei dateiänderung neu um bei der Entwicklung zu helfen
+Startet node bei Dateiänderung neu um bei der Entwicklung zu helfen
 * pm2
 * express
 ** cookie-parser
@@ -273,7 +274,7 @@ Startet node bei dateiänderung neu um bei der Entwicklung zu helfen
 ** morgan
 ** pug
 * cors +
-Es musste cors aktiviert werden, da die Website probleme hatte auf die API zuzugreifen
+Es musste cors aktiviert werden, da die Website Probleme hatte auf die API zuzugreifen
 
 === Probleme im Projekt und Lösungsansätze
 
